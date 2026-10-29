@@ -5,6 +5,7 @@ import Photo from '../components/Photo.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { students } from '../data/people';
 import { org } from '../data/site';
+import { paypalGiftUrl } from '../lib/paypal';
 ---
 <Base
   title="Sponsor a Teenage Mother’s Education in Uganda"
@@ -60,8 +61,8 @@ import { org } from '../data/site';
       <div class="stack">
         <h2 class="h2">Start a sponsorship</h2>
         <p class="lead">Send us a note and we will confirm the details with you by email. You can then give each term through PayPal, by card or PayPal account.</p>
-        <p class="small muted">US donors: gifts are tax-deductible through {org.usEntity} (EIN {org.usEin}).</p>
-        <p><a class="btn btn--give" href={org.paypal} target="_blank" rel="noopener">Give now with PayPal</a></p>
+        <p class="small muted">US donors: gifts are tax-deductible through {org.usEntity}, a 501(c)(3) charity (EIN {org.usEin}).</p>
+        <div class="btns"><a class="btn btn--give" href={paypalGiftUrl({ amount: 50, monthly: true, purpose: 'Back to School sponsorship' })}>Sponsor $50 a month</a><a class="btn btn--line" href={paypalGiftUrl({ purpose: 'Back to School sponsorship' })}>Give once</a></div>
       </div>
       <ContactForm defaultType="sponsor" submitLabel="Send sponsorship request" />
     </div>

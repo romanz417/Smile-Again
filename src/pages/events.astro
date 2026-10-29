@@ -5,21 +5,27 @@ import Photo from '../components/Photo.astro';
 import Icon from '../components/Icon.astro';
 ---
 <Base
-  title="Your Worth Summit 2026 for Teenage Mothers"
-  description="The Your Worth Summit is a five-day retreat in Masaka, Uganda where teenage mothers heal, build confidence and see a future again. Theme for 2026: Rescued for a Purpose."
+  title="Your Worth Summit: A Retreat for Teenage Mothers"
+  description="The Your Worth Summit is a five-day retreat in Masaka, Uganda, where teenage mothers heal, build confidence and see a future again. The 2026 summit ran July 6–10."
   image="summit"
 >
   <PageHeader
-    title="Your Worth Summit 2026"
-    lead="Rescued for a purpose (Psalm 40:1–3). For five days we walk with teenage mothers — restoring dignity, healing emotional wounds, building confidence and helping them see a future again."
+    title="Your Worth Summit"
+    lead="Every year, for five days, we walk with teenage mothers — restoring dignity, healing emotional wounds, building confidence and helping them see a future again."
     crumbs={[{ label: 'Get involved' }, { label: 'Your Worth Summit' }]}
     image="sp-mourine"
     imageAlt="A young mother with her baby at the Your Worth Summit"
   >
     <div class="btns" style="margin-top:32px">
       <a class="btn btn--give" href="/give?for=summit">Sponsor a mother’s place</a>
-      <a class="btn btn--line" href="/contact">Ask about dates</a>
+      <a class="btn btn--line" href="/contact">Ask about the next summit</a>
     </div>
+    <dl class="summit-facts">
+      <div><dt>2026 summit</dt><dd>July 6–10, 2026</dd></div>
+      <div><dt>Theme</dt><dd>Rescued for a purpose (Psalm 40:1–3)</dd></div>
+      <div><dt>Where</dt><dd>Smile Again mission, Kajjasembe Drive, Masaka</dd></div>
+      <div><dt>Next summit</dt><dd>2027 dates to be announced</dd></div>
+    </dl>
   </PageHeader>
 
   <section class="band">
@@ -37,3 +43,11 @@ import Icon from '../components/Icon.astro';
     </div>
   </section>
 </Base>
+
+<style>
+  .summit-facts { margin: 36px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 28px; max-width: 560px; }
+  .summit-facts div { border-top: 2px solid var(--forest); padding-top: 10px; }
+  .summit-facts dt { font-size: 15px; color: var(--muted); }
+  .summit-facts dd { margin: 4px 0 0; font-weight: 700; color: var(--ink); }
+  @media (max-width: 560px) { .summit-facts { grid-template-columns: minmax(0, 1fr); } }
+</style>

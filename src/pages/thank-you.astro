@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+---
+<Base title="Thank you for your gift" description="Thank you for supporting teenage mothers in Masaka, Uganda." noindex>
+  <section class="band band--peach">
+    <div class="wrap split">
+      <div class="stack">
+        <p class="eyebrow">Thank you</p>
+        <h1 class="h1">Your gift is on its way to Masaka.</h1>
+        <p class="lead">Thank you for walking with a young mother. PayPal will email your receipt. If you set up a monthly gift, it will repeat automatically, and you can change or cancel it any time in your PayPal account.</p>
+        <p class="lead">Want to hear how your gift helps? Subscribe to Letters from Masaka at the bottom of this page.</p>
+        <div class="btns">
+          <a class="btn btn--solid" href="/stories">Read stories from Masaka</a>
+          <a class="btn btn--line" href="/">Back to the home page</a>
+        </div>
+      </div>
+      <Photo name="story-3" alt="A gathering of young mothers and their children" ratio="wide" class="ph--lg" sizes="(max-width: 860px) 100vw, 50vw" />
+    </div>
+  </section>
+</Base>

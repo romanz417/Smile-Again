@@ -12,7 +12,6 @@ export const org = {
   street: 'Kajansembe Drive, Masaka–Kyotera Road',
   city: 'Masaka',
   country: 'Uganda',
-  paypal: import.meta.env.PUBLIC_PAYPAL_DONATE_URL ?? 'https://www.paypal.com/donate/?hosted_button_id=MZX6WAF96MQ4U',
   socials: [
     { label: 'Facebook', href: 'https://www.facebook.com/smileagainfamiliesuganda' },
     { label: 'Instagram', href: 'https://www.instagram.com/smileagainfamiliesuganda/' },
