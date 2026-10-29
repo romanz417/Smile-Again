@@ -66,7 +66,7 @@ export const nav = [
       { label: 'Sponsor a young mother', href: '/sponsor' },
       { label: 'Volunteer & mission trips', href: '/volunteer' },
       { label: 'Your Worth Summit', href: '/events' },
-      { label: 'Contact us', href: '/contact' },
     ],
   },
+  { label: 'Contact', href: '/contact' },
 ];
