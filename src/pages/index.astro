@@ -23,6 +23,11 @@ const levels = [
   { name: 'Spiritually', warm: true, icon: '<path d="M12 2v6M9 5h6"/><path d="M12 8c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9z"/>', text: 'Faith-rooted formation with our partner parishes, helping each mother see the value of her life again.' },
   { name: 'Economically', warm: false, icon: '<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-6h4v6"/>', text: 'Vocational and business training — tailoring, hairdressing, computer skills — for income that lasts.' },
 ];
+const heroSlides = [
+  { name: 'hero-big', alt: 'Three young children smiling outside a church in Masaka', caption: 'Healing hearts, building futures, one family at a time', pos: '50% 50%' },
+  { name: 'hero-summit', alt: 'Mentors praying over a young mother at the Your Worth Summit', caption: 'Empowering families through spiritual and emotional support', pos: '45% 40%' },
+  { name: 'hero-sewing', alt: 'A mother at her sewing machine beside her smiling daughter', caption: 'Tackling poverty in communities to build better lives', pos: '35% 50%' },
+];
 ---
 <Base
   title="Smile Again Families Foundation | Hope for Teenage Mothers in Uganda"
@@ -41,7 +46,14 @@ const levels = [
         </div>
       </div>
       <div class="hero__media">
-        <Photo name="hero-big" alt="Three young children smiling outside a church in Masaka" ratio="free" eager class="hero__img ph--lg" sizes="(max-width: 860px) 100vw, 50vw" widths={[600, 900, 1200, 1500]} />
+        <div class="hero__slides" role="region" aria-roledescription="carousel" aria-label="Life at Smile Again">
+          {heroSlides.map((sl, i) => (
+            <figure class="hero__slide" data-active={i === 0 ? 'true' : 'false'} aria-hidden={i === 0 ? 'false' : 'true'} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${heroSlides.length}`}>
+              <Photo name={sl.name} alt={sl.alt} ratio="free" eager={i === 0} class="hero__img" sizes="(max-width: 860px) 100vw, 50vw" widths={[600, 900, 1200, 1500]} position={sl.pos} />
+              <figcaption class="hero__caption">{sl.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
         <div class="hero__badge"><strong>798</strong><span>young mothers’ lives transformed in ten years</span></div>
       </div>
     </div>
@@ -243,13 +255,20 @@ const levels = [
   .hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: center; padding-block: 64px 88px; }
   .hero__lead { margin: 24px 0 36px; font-size: 21px; max-width: 560px; }
   .hero__media { position: relative; }
-  .hero__media :global(.hero__img) { height: 540px; }
-  .hero__badge { position: absolute; left: -16px; bottom: -28px; background: #fff; border-radius: 20px; padding: 18px 22px; box-shadow: 0 12px 32px rgba(23,32,27,.14); display: flex; gap: 14px; align-items: center; max-width: 310px; }
+  .hero__slides { position: relative; height: 540px; border-radius: var(--radius-lg); overflow: hidden; background: var(--sage); }
+  .hero__slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 1s ease; }
+  .hero__slide[data-active="true"] { opacity: 1; }
+  .hero__slide :global(.hero__img) { height: 100%; border-radius: 0; }
+  .hero__caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 64px 28px 24px; color: #fff; font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1.25; text-align: right; text-wrap: balance; background: linear-gradient(to top, rgba(17, 46, 31, .88), rgba(17, 46, 31, .55) 55%, rgba(17, 46, 31, 0)); }
+  .hero__caption { padding-left: 330px; }
+  @media (prefers-reduced-motion: reduce) { .hero__slide { transition: none; } }
+  .hero__badge { position: absolute; left: -16px; bottom: -28px; z-index: 2; background: #fff; border-radius: 20px; padding: 18px 22px; box-shadow: 0 12px 32px rgba(23,32,27,.14); display: flex; gap: 14px; align-items: center; max-width: 310px; }
   .hero__badge strong { font-family: var(--display); font-weight: 800; font-size: 42px; color: var(--forest); line-height: 1; }
   .hero__badge span { font-size: 15px; line-height: 1.35; color: var(--body); }
   @media (max-width: 860px) {
     .hero__grid { grid-template-columns: minmax(0, 1fr); padding-block: 48px 72px; }
-    .hero__media :global(.hero__img) { height: 360px; }
+    .hero__slides { height: 400px; }
+    .hero__caption { padding: 56px 20px 64px; font-size: 18px; text-align: left; }
     .hero__badge { left: 12px; }
   }
 
@@ -302,3 +321,17 @@ const levels = [
   .tier--featured p { color: var(--on-dark); }
   .tier__flag { position: absolute; top: -13px; left: 28px; background: var(--shirt); color: var(--ink); font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
 </style>
+
+<script>
+  // Home hero slideshow: cross-fades to the next photo every 6 seconds (paused when the tab is hidden).
+  const hero = document.querySelector<HTMLElement>('.hero__slides');
+  if (hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const slides = [...hero.querySelectorAll<HTMLElement>('.hero__slide')];
+    let cur = 0;
+    window.setInterval(() => {
+      if (document.hidden) return;
+      cur = (cur + 1) % slides.length;
+      slides.forEach((sl, i) => { sl.dataset.active = String(i === cur); sl.setAttribute('aria-hidden', String(i !== cur)); });
+    }, 6000);
+  }
+</script>
