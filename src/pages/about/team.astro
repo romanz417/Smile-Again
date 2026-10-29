@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Photo from '../../components/Photo.astro';
+import GiveBand from '../../components/GiveBand.astro';
+import { founders, board, staff } from '../../data/people';
+---
+<Base
+  title="Our Leadership, Board and Team"
+  description="Meet the founders, board of directors and staff of Smile Again Families Foundation in Masaka, Uganda, led by co-founders Stella Ritah Nabukera and Fred Mugaga Ssentamu."
+  image="core-values"
+>
+  <PageHeader
+    title="The people behind Smile Again"
+    lead="A small Ugandan team, guided by an experienced board, working every day alongside young mothers in Masaka."
+    crumbs={[{ label: 'About', href: '/about' }, { label: 'Leadership & team' }]}
+  />
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:56px">Our founders</h2>
+      <div class="founders">
+        {founders.map((f) => (
+          <article class="founder">
+            <Photo name={f.photo} alt={f.name} shape="arch" ratio="tall" sizes="(max-width: 860px) 70vw, 280px" widths={[420, 560]} position="50% 30%" />
+            <div>
+              <h3 class="h3">{f.name}</h3>
+              <p class="kicker" style="margin-top:6px">{f.role}</p>
+              <div class="prose">{f.bio.map((p) => <p>{p}</p>)}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--sage">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="h2">Board of directors</h2>
+        <p class="lead">Our board brings expertise in medicine, human rights, finance, law and pastoral care, and holds the foundation accountable to its mission.</p>
+      </div>
+      <ul class="people">
+        {board.map((p) => (
+          <li>
+            <Photo name={p.photo} alt={p.name} ratio="square" sizes="200px" widths={[320]} position="50% 25%" />
+            <h3 class="h4">{p.name}</h3>
+            <p class="small muted">{p.role}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:48px">Staff</h2>
+      <ul class="people">
+        {staff.map((p) => (
+          <li>
+            <Photo name={p.photo} alt={p.name} ratio="square" sizes="200px" widths={[320]} position="50% 25%" />
+            <h3 class="h4">{p.name}</h3>
+            <p class="small muted">{p.role}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <GiveBand />
+</Base>
+
+<style>
+  .founders { display: grid; gap: 72px; }
+  .founder { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+  @media (max-width: 760px) { .founder { grid-template-columns: minmax(0, 1fr); } .founder :global(.ph) { max-width: 280px; } }
+  .people { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 40px 28px; }
+  .people :global(.ph) { border-radius: 999px; margin-bottom: 16px; max-width: 180px; }
+  .people h3 { margin-bottom: 4px; }
+</style>

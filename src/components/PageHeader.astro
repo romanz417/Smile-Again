@@ -1,0 +1,42 @@
+---
+import Photo from './Photo.astro';
+
+interface Props {
+  title: string;
+  lead?: string;
+  crumbs?: { label: string; href?: string }[];
+  image?: string;
+  imageAlt?: string;
+  position?: string;
+}
+const { title, lead, crumbs = [], image, imageAlt = '', position } = Astro.props;
+---
+<section class="page-head">
+  <div class:list={['wrap', image ? 'split split--wide-left' : 'wrap--narrow']}>
+    <div class="page-head__text">
+      {crumbs.length > 0 && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            {crumbs.map((c) => <li>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>)}
+          </ol>
+        </nav>
+      )}
+      <h1 class="h1 rise">{title}</h1>
+      {lead && <p class="lead rise rise-2" style="margin-top:22px">{lead}</p>}
+      <slot />
+    </div>
+    {image && (
+      <div class="rise rise-3">
+        <Photo name={image} alt={imageAlt} shape="arch" ratio="tall" eager sizes="(max-width: 860px) 100vw, 45vw" position={position} />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .page-head { padding-block: clamp(48px, 7vw, 96px) clamp(56px, 8vw, 104px); background: var(--sage); }
+  .page-head .split { align-items: end; }
+  .page-head :global(.ph--arch) { max-width: 460px; margin-left: auto; }
+  @media (max-width: 860px) { .page-head :global(.ph--arch) { max-width: 360px; margin: 0 auto; } }
+</style>

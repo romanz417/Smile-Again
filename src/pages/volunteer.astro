@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import ContactForm from '../components/ContactForm.astro';
+
+const duties = [
+  'Help with daily program activities, including childcare, skills training and community events',
+  'Support educational and recreational activities for mothers and their children',
+  'Prepare and help run workshops, counseling sessions and mentorship programs',
+  'Offer encouragement and emotional support in a positive, respectful environment',
+  'Assist with fundraising events, awareness campaigns and outreach',
+  'Keep program spaces clean, safe and welcoming',
+  'Report observations and progress to the volunteer coordinator',
+  'Follow our policies and child-safeguarding guidelines at all times',
+];
+const lookingFor = [
+  'A heart for teenage mothers and vulnerable children',
+  'Good communication and teamwork',
+  'Respect for confidentiality and for people of every background',
+  'Patience, empathy and a positive attitude',
+  'Experience in childcare, education, counseling or community service is welcome but not required',
+];
+const gain = [
+  'Hands-on experience in social work, childcare and community development',
+  'Exposure to program management, skills training and outreach',
+  'A certificate of volunteering when you complete your commitment',
+  'Friendships and a share in the lives of the mothers and children',
+];
+---
+<Base
+  title="Volunteer and Mission Trips in Uganda"
+  description="Volunteer with teenage mothers in Masaka, Uganda, or join a FOCUS mission trip. Help with childcare, mentorship, skills training and outreach. Minimum commitment: one week."
+  image="focus-2"
+>
+  <PageHeader
+    title="Volunteer with us in Uganda"
+    lead="Missionaries and volunteers bring faith-driven, practical support to young mothers who have known abandonment and abuse. Their presence builds relationships that restore dignity and confidence."
+    crumbs={[{ label: 'Get involved' }, { label: 'Volunteer & mission trips' }]}
+    image="focus-4"
+    imageAlt="Volunteers dancing with mothers and children"
+  >
+    <div class="btns" style="margin-top:32px"><a class="btn btn--solid" href="#apply">Apply to volunteer</a></div>
+  </PageHeader>
+
+  <section class="band">
+    <div class="wrap split">
+      <div class="stack">
+        <h2 class="h2">Mission trips with FOCUS</h2>
+        <div class="prose">
+          <p>FOCUS — the Fellowship of Catholic University Students — began as a small movement on college campuses and now accompanies Catholics at every stage of life.</p>
+          <p>Every year, FOCUS sends missionaries to Uganda to serve with Smile Again Families. They spend time with mothers and their babies, both in the villages and at our center, through mentorship, discipleship, life-skills training and outreach. It is a spiritually nourishing experience for everyone involved.</p>
+        </div>
+        <a class="link-more" href="https://focus.org/missions/trips/africa/uganda/" rel="noopener">See FOCUS mission trips to Uganda <Icon name="arrow" size={18} /></a>
+      </div>
+      <div class="mosaic">
+        <Photo name="focus-1" alt="Missionaries serving lunch to mothers" ratio="wide" sizes="(max-width: 860px) 100vw, 45vw" />
+        <Photo name="focus-3" alt="Missionaries and mothers in a circle on a playing field" ratio="wide" sizes="(max-width: 860px) 50vw, 22vw" widths={[480, 800]} />
+        <Photo name="volunteer" alt="Volunteers sitting with young mothers" ratio="wide" sizes="(max-width: 860px) 50vw, 22vw" widths={[480, 800]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--sage">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="h2">The volunteer role</h2>
+        <p class="lead">Volunteers serve at our center and in the field, helping create a safe, nurturing and empowering environment for mothers and their children. The minimum commitment is one week.</p>
+      </div>
+      <div class="cols">
+        <div><h3 class="h4">What you’ll do</h3><ul class="ticks">{duties.map((d) => <li><Icon name="check" /><span>{d}</span></li>)}</ul></div>
+        <div><h3 class="h4">Who we’re looking for</h3><ul class="ticks">{lookingFor.map((d) => <li><Icon name="check" /><span>{d}</span></li>)}</ul></div>
+        <div><h3 class="h4">What you’ll gain</h3><ul class="ticks">{gain.map((d) => <li><Icon name="check" /><span>{d}</span></li>)}</ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="apply">
+    <div class="wrap split split--top">
+      <div class="stack">
+        <h2 class="h2">Apply to volunteer</h2>
+        <p class="lead">Tell us a little about yourself, when you would like to come and how long you can stay. Our volunteer coordinator will reply by email.</p>
+      </div>
+      <ContactForm defaultType="volunteer" submitLabel="Send application" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .mosaic { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .mosaic > :first-child { grid-column: 1 / -1; }
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
+  .cols h3 { margin-bottom: 18px; }
+  .cols .ticks { font-size: 17px; }
+  @media (max-width: 960px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+</style>

@@ -1,0 +1,29 @@
+---
+import Photo from './Photo.astro';
+interface Props { title?: string; text?: string; image?: string; imageAlt?: string; give?: string; giveHref?: string; }
+const {
+  title = 'Help a young mother smile again.',
+  text = 'Your gift provides counseling, school fees, skills training and a safe place to live for teenage mothers in Masaka, Uganda. Gifts from the US are tax-deductible.',
+  image = 'who-1',
+  imageAlt = 'A volunteer sitting with a young mother and her baby',
+  give = 'Give monthly',
+  giveHref = '/give',
+} = Astro.props;
+---
+<section class="band band--forest give-band">
+  <div class="wrap split split--wide-right">
+    <Photo name={image} alt={imageAlt} shape="arch" ratio="tall" sizes="(max-width: 860px) 90vw, 40vw" />
+    <div class="stack">
+      <h2 class="h2">{title}</h2>
+      <p class="lead">{text}</p>
+      <div class="btns">
+        <a class="btn btn--give" href={giveHref}>{give}</a>
+        <a class="btn btn--line-light" href="/sponsor">Sponsor a mother</a>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .give-band :global(.ph--arch) { max-width: 420px; }
+  @media (max-width: 860px) { .give-band :global(.ph--arch) { max-width: 320px; } }
+</style>

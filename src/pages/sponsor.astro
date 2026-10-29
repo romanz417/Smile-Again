@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Photo from '../components/Photo.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { students } from '../data/people';
+import { org } from '../data/site';
+---
+<Base
+  title="Sponsor a Teenage Mother’s Education in Uganda"
+  description="Sponsor a young mother in Masaka, Uganda to return to secondary school or nursing training. Secondary school costs about $600 a year, including tuition and school requirements."
+  image="school-hero"
+>
+  <PageHeader
+    title="Sponsor a young mother’s education"
+    lead="These young women left school because of poverty and pregnancy. Now they are ready to go back. Your sponsorship keeps them in class, and gives their children a better start too."
+    crumbs={[{ label: 'Get involved' }, { label: 'Sponsor a young mother' }]}
+    image="school-hero"
+    imageAlt="Young mothers in school uniform with Smile Again staff"
+  >
+    <div class="btns" style="margin-top:32px"><a class="btn btn--give" href="#students">Meet the students</a></div>
+  </PageHeader>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:40px">How sponsorship works</h2>
+      <ol class="how">
+        <li><h3 class="h4">Choose a student</h3><p>Read the stories below and tell us who you would like to support, or let us match you with a student in need.</p></li>
+        <li><h3 class="h4">Give each term</h3><p>Secondary school costs about $150 in tuition plus $50 for school requirements each term. Nursing school costs about $550 plus $50 each semester.</p></li>
+        <li><h3 class="h4">Walk with her</h3><p>Many sponsors stay with the same student until she graduates, usually four to eight years. We share updates on her progress.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band band--sage" id="students">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:56px">Students waiting for a sponsor</h2>
+      <div class="profiles">
+        {students.map((s) => (
+          <article class="profile" id={s.name.toLowerCase()}>
+            <Photo name={s.photo} alt={`Portrait of ${s.name}`} shape="arch" ratio="tall" sizes="(max-width: 760px) 70vw, 260px" widths={[420, 560]} position="50% 25%" />
+            <div>
+              <h3 class="h3">{s.name}</h3>
+              <p class="kicker" style="margin-top:6px">{s.level}</p>
+              <p>{s.story}</p>
+              <dl class="need">
+                <div><dt>She needs</dt><dd>{s.need}</dd></div>
+                <div><dt>Approximate yearly cost</dt><dd>{s.needPerYear}</dd></div>
+              </dl>
+              <a class="btn btn--solid btn--sm" href={`#sponsor-form`} data-student={s.name}>Sponsor {s.name}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="sponsor-form">
+    <div class="wrap split split--top">
+      <div class="stack">
+        <h2 class="h2">Start a sponsorship</h2>
+        <p class="lead">Send us a note and we will confirm the details with you by email. You can then give each term through PayPal, by card or PayPal account.</p>
+        <p class="small muted">US donors: gifts are tax-deductible through {org.usEntity} (EIN {org.usEin}).</p>
+        <p><a class="btn btn--give" href={org.paypal} target="_blank" rel="noopener">Give now with PayPal</a></p>
+      </div>
+      <ContactForm defaultType="sponsor" submitLabel="Send sponsorship request" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .how { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; counter-reset: h; }
+  .how li { counter-increment: h; border-top: 2px solid var(--forest); padding-top: 22px; }
+  .how li::before { content: counter(h); font-family: var(--serif); color: var(--leaf); font-weight: 600; font-size: 22px; }
+  .how h3 { margin: 6px 0 8px; }
+  .how p { color: var(--body); }
+  @media (max-width: 760px) { .how { grid-template-columns: minmax(0, 1fr); } }
+  .profiles { display: grid; gap: 64px; }
+  .profile { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: start; max-width: 1000px; scroll-margin-top: 110px; }
+  .profile p { color: var(--body); max-width: 38em; }
+  .need { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 22px 0; padding: 18px 0; border-block: 1px solid var(--line); max-width: 38em; }
+  .need dt { font-size: 15px; color: var(--muted); }
+  .need dd { margin: 4px 0 0; font-weight: 700; color: var(--ink); }
+  @media (max-width: 760px) { .profile { grid-template-columns: minmax(0, 1fr); } .profile :global(.ph) { max-width: 260px; } .need { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-student]').forEach((a) =>
+    a.addEventListener('click', () => {
+      const msg = document.getElementById('cf-message') as HTMLTextAreaElement | null;
+      if (msg && !msg.value) msg.value = `I would like to sponsor ${a.dataset.student}.`;
+    }),
+  );
+</script>

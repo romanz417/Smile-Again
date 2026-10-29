@@ -1,0 +1,23 @@
+---
+import Photo from './Photo.astro';
+import { formatDate } from '../lib/supabase';
+import { hasPhoto } from '../lib/photos';
+import type { Story } from '../data/stories';
+interface Props { story: Story; headingLevel?: 'h2' | 'h3'; }
+const { story, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+<article class="story-card">
+  {hasPhoto(story.cover_image) && <Photo name={story.cover_image} alt="" ratio="wide" sizes="(max-width: 860px) 100vw, 33vw" widths={[480, 800]} />}
+  <p class="story-card__meta small muted"><time datetime={story.published_at}>{formatDate(story.published_at)}</time>{story.category && <span>, {story.category}</span>}</p>
+  <H class="h4"><a href={`/stories/${story.slug}`}>{story.title}</a></H>
+  <p class="small" style="color:var(--body)">{story.excerpt}</p>
+</article>
+<style>
+  .story-card { display: grid; gap: 10px; align-content: start; position: relative; }
+  .story-card :global(.ph) { margin-bottom: 8px; }
+  .story-card a { color: var(--ink); text-decoration: none; }
+  .story-card a::after { content: ""; position: absolute; inset: 0; }
+  .story-card:hover a { text-decoration: underline; }
+  .story-card__meta { margin: 0; }
+</style>

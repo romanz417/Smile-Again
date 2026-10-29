@@ -1,0 +1,60 @@
+---
+import { nav } from '../data/site';
+import Icon from './Icon.astro';
+import logo from '../assets/logo-mark.webp';
+import { Image } from 'astro:assets';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
+---
+<a class="skip" href="#main">Skip to content</a>
+<header class="header" id="site-header">
+  <div class="wrap header__bar">
+    <a class="brand" href="/" aria-label="Smile Again Families Foundation, home">
+      <Image src={logo} alt="" height={48} loading="eager" />
+      <span>Smile Again<small>Families Foundation</small></span>
+    </a>
+    <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+      <span class="menu-btn__open"><Icon name="menu" size={24} /></span>
+      <span class="menu-btn__close"><Icon name="close" size={24} /></span>
+    </button>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul class="nav__list">
+        {nav.map((item) => (
+          <li class="nav__item">
+            <a class="nav__link" href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}{item.children && <span class="nav__chev"><Icon name="chev" size={16} /></span>}
+            </a>
+            {item.children && (
+              <ul class="nav__menu">
+                {item.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+      <div class="nav__actions">
+        <a class="btn btn--line btn--sm" href="/sponsor">Sponsor a mother</a>
+        <a class="btn btn--give btn--sm" href="/give">Donate</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const btn = header.querySelector<HTMLButtonElement>('.menu-btn')!;
+  btn.addEventListener('click', () => {
+    const open = !header.hasAttribute('data-open');
+    header.toggleAttribute('data-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header.hasAttribute('data-open')) btn.click();
+  });
+  const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

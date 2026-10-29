@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import GiveBand from '../../components/GiveBand.astro';
+import { programs, model } from '../../data/programs';
+---
+<Base
+  title="Our Programs for Teenage Mothers in Uganda"
+  description="Safe shelter, education, livelihoods, maternal health, peer support and prevention: six programs that restore teenage mothers in Masaka, Uganda."
+  image="sol-1"
+>
+  <PageHeader
+    title="Helping teenage mothers live to their full potential"
+    lead="Every mother begins with our Your Worth Summit and then joins a one-year formation program, at our center and in her own community."
+    crumbs={[{ label: 'Our work' }]}
+    image="proj-5967"
+    imageAlt="Young mothers in a counseling session"
+  />
+
+  <section class="band">
+    <div class="wrap split split--top">
+      <h2 class="h2">The formation year</h2>
+      <div class="prose">
+        <p>During the year, mothers are trained in spiritual values, hope-based communication, foundational life skills, human rights, computer skills and financial literacy.</p>
+        <p>By the end, we hope to see a confident young woman who can speak up in her community without fear — taking part in local groups, advocating for herself and for other teenage mothers, and using the resources around her to start a business that sustains her, even after we step back.</p>
+      </div>
+    </div>
+    <div class="wrap">
+      <ol class="steps">
+        {model.map((m, i) => <li><span aria-hidden="true">{i + 1}</span><h3 class="h4">{m.name}</h3><p class="small">{m.text}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="band band--sage">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:56px">Our programs</h2>
+      <div class="list">
+        {programs.map((p, i) => (
+          <a class:list={['prog', { 'prog--flip': i % 2 === 1 }]} href={`/our-work/${p.slug}`}>
+            <Photo name={p.cover} alt={p.coverAlt} ratio="wide" sizes="(max-width: 860px) 100vw, 50vw" />
+            <div>
+              <h3 class="h3">{p.name}</h3>
+              <p>{p.summary}</p>
+              <span class="link-more">Learn more <Icon name="arrow" size={18} /></span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <GiveBand />
+</Base>
+
+<style>
+  .steps { list-style: none; margin: 64px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; counter-reset: s; }
+  .steps li { border-top: 2px solid var(--forest); padding-top: 22px; }
+  .steps span { font-family: var(--serif); font-size: 20px; color: var(--leaf); font-weight: 600; }
+  .steps h3 { margin: 6px 0 8px; }
+  .steps p { color: var(--body); }
+  @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+  .list { display: grid; gap: 56px; }
+  .prog { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: center; text-decoration: none; color: var(--ink); }
+  .prog--flip > :first-child { order: 2; }
+  .prog h3 { margin-bottom: 10px; }
+  .prog p { color: var(--body); margin-bottom: 16px; }
+  .prog:hover h3 { color: var(--leaf); }
+  .prog:hover .link-more { text-decoration: underline; }
+  @media (max-width: 760px) { .prog { grid-template-columns: minmax(0, 1fr); } .prog--flip > :first-child { order: 0; } }
+</style>

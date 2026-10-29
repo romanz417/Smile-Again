@@ -1,0 +1,122 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import GiveBand from '../../components/GiveBand.astro';
+import { timeline } from '../../data/people';
+import { ugandaFact, impact } from '../../data/site';
+---
+<Base
+  title="About Us: Our Story and Mission"
+  description="Founded in 2014 by Fred and Stella, a Catholic couple in Masaka, Uganda, Smile Again Families restores abused and abandoned teenage mothers and their children."
+  image="story-1"
+>
+  <PageHeader
+    title="A family that began with one couple’s calling."
+    lead="Smile Again Families Foundation is a registered community-based nonprofit in Masaka, Uganda. We help abused and abandoned teenage mothers rediscover their worth and their purpose."
+    crumbs={[{ label: 'About' }]}
+    image="story-1"
+    imageAlt="Co-founders Fred and Stella"
+  />
+
+  <section class="band">
+    <div class="wrap split split--top">
+      <div>
+        <h2 class="h2">Our story</h2>
+      </div>
+      <div class="prose">
+        <p>Smile Again Families was founded in 2014 by Fred and Stella, a Catholic married couple from Uganda who felt called to help young adults embrace Christian marriage. In their work, they kept meeting young women carrying deep wounds that had been ignored and left unhealed: abandoned teenage mothers.</p>
+        <p>They came to see that many marital struggles begin with brokenness in adolescence. One of the biggest causes was early pregnancy — often after poverty forced a girl out of school and left her vulnerable to sexual exploitation, and often followed by an early, unstable marriage.</p>
+        <p>Moved by compassion, Fred and Stella set out to find, restore and empower survivors of teenage pregnancy. Today we help young mothers rediscover their worth and the value of their lives through one-on-one psychosocial support, spiritual formation, vocational and business training, a return to formal education, and guidance in personal development — so they can earn a living and return to their families and communities with dignity.</p>
+        <p>We also run awareness campaigns in schools, churches and villages, reaching thousands of young people every year.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--sage">
+    <div class="wrap split">
+      <div class="mv">
+        <div>
+          <h2 class="h3">Our mission</h2>
+          <p class="lead">To support abused and abandoned teenage mothers to discover their inner worth by restoring them emotionally, spiritually and economically.</p>
+        </div>
+        <div>
+          <h2 class="h3">Our vision</h2>
+          <p class="lead">Strong, sustainable and reliable families that transform society for generations.</p>
+        </div>
+      </div>
+      <Photo name="core-values" alt="Smile Again staff members" ratio="wide" />
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="h2">Why this work matters</h2>
+      </div>
+      <div class="split split--top">
+        <div class="prose">
+          <p><strong style="color:var(--ink)">{ugandaFact.stat} {ugandaFact.text}</strong> <span class="muted">({ugandaFact.source})</span></p>
+          <p>Uganda is a largely patriarchal society, and deep-rooted cultural attitudes add to the inequality girls and women face. Teenage pregnancy profoundly changes the course of a girl’s life: it disrupts her emotional development, puts her health and her baby’s at risk, cuts short her education and job prospects, and passes poverty and poor health on to the next generation.</p>
+          <p>Many of the mothers we serve are survivors of sexual abuse or abusive relationships. Because they could not speak out, their families sent them away. We provide a safe home for some who are homeless, and support many more within their own communities through solidarity groups.</p>
+        </div>
+        <div>
+          <h3 class="h3" style="margin-bottom:18px">Our strategic objectives</h3>
+          <ul class="ticks">
+            <li><Icon name="check" /><span>Raise awareness of teenage pregnancy among families and communities, and enroll teenage mothers in holistic formation programs.</span></li>
+            <li><Icon name="check" /><span>Restore hope to survivors of teenage pregnancy and strengthen family and community support for their reintegration.</span></li>
+            <li><Icon name="check" /><span>Equip teenage mothers and their families with livelihood skills for long-term self-reliance and stability.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--forest">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:48px">Our journey</h2>
+      <ol class="timeline">
+        {timeline.map((t) => (
+          <li>
+            <p class="timeline__year">{t.year}</p>
+            <h3 class="h4">{t.title}</h3>
+            <p>{t.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="h2" style="margin-bottom:12px">Ten years in numbers</h2>
+      <p class="muted">Totals from 2014 to 2024. Eight young mothers have also returned to formal education.</p>
+      <dl class="nums">
+        {impact.map((s) => <div><dd>{s.value}</dd><dt>{s.label}</dt></div>)}
+      </dl>
+      <div class="btns" style="margin-top:48px">
+        <a class="btn btn--solid" href="/about/team">Meet our team</a>
+        <a class="btn btn--line" href="/our-work">See our programs</a>
+      </div>
+    </div>
+  </section>
+
+  <GiveBand image="story-3" imageAlt="A gathering of young mothers and their children" />
+</Base>
+
+<style>
+  .mv { display: grid; gap: 40px; }
+  .mv h2 { margin-bottom: 10px; color: var(--leaf); }
+  .mv .lead { color: var(--ink); font-family: var(--serif); font-size: clamp(22px, 2vw, 27px); line-height: 1.4; }
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; border-top: 1px solid rgba(255,255,255,.2); }
+  .timeline li { padding-top: 28px; position: relative; }
+  .timeline li::before { content: ""; position: absolute; top: -7px; left: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--shirt); }
+  .timeline__year { font-family: var(--serif); font-size: 48px; font-weight: 600; color: #fff; line-height: 1; margin-bottom: 14px; }
+  .timeline h3 { color: #fff; margin-bottom: 8px; }
+  @media (max-width: 860px) { .timeline { grid-template-columns: minmax(0, 1fr); } }
+  .nums { margin: 40px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 32px; }
+  .nums dd { margin: 0; font-family: var(--serif); font-size: 52px; font-weight: 600; color: var(--forest); line-height: 1; }
+  .nums dt { margin-top: 8px; color: var(--body); font-size: 17px; }
+  .nums div { border-top: 2px solid var(--forest); padding-top: 18px; display: flex; flex-direction: column; }
+</style>

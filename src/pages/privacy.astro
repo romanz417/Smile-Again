@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { org } from '../data/site';
+---
+<Base title="Privacy Policy" description="How Smile Again Families Foundation collects, uses and protects the personal information you share with us.">
+  <PageHeader title="Privacy policy" crumbs={[{ label: 'Privacy policy' }]} />
+  <section class="band">
+    <div class="wrap wrap--narrow prose">
+      <p class="muted">Last updated: October 2026</p>
+      <h2>What we collect</h2>
+      <p>When you contact us, apply to volunteer, ask about sponsorship or subscribe to our emails, we collect the details you give us: your name, email address, phone number (if provided) and your message.</p>
+      <p>Donations are processed by PayPal. We do not see or store your card details. PayPal shares your name, email and gift amount with us so we can thank you and keep accurate records.</p>
+      <h2>How we use it</h2>
+      <p>We use your information only to reply to you, to manage sponsorships, volunteering and donations, and — if you subscribe — to send occasional updates about our work. We never sell or rent your information.</p>
+      <h2>Where it is stored</h2>
+      <p>Form submissions are stored securely with our database provider, Supabase, on servers in the European Union. Only authorized staff can read them.</p>
+      <h2>Your choices</h2>
+      <p>You can unsubscribe from emails at any time, and you can ask us to see, correct or delete the information we hold about you. If you live in the European Union or the UK, you have these rights under the GDPR.</p>
+      <h2>Contact</h2>
+      <p>For any privacy question or request, email <a href={`mailto:${org.email}`}>{org.email}</a>.</p>
+    </div>
+  </section>
+</Base>

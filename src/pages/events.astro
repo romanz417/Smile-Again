@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base
+  title="Your Worth Summit 2026 for Teenage Mothers"
+  description="The Your Worth Summit is a five-day retreat in Masaka, Uganda where teenage mothers heal, build confidence and see a future again. Theme for 2026: Rescued for a Purpose."
+  image="summit"
+>
+  <PageHeader
+    title="Your Worth Summit 2026"
+    lead="Rescued for a purpose (Psalm 40:1–3). For five days we walk with teenage mothers — restoring dignity, healing emotional wounds, building confidence and helping them see a future again."
+    crumbs={[{ label: 'Get involved' }, { label: 'Your Worth Summit' }]}
+    image="sp-mourine"
+    imageAlt="A young mother with her baby at the Your Worth Summit"
+  >
+    <div class="btns" style="margin-top:32px">
+      <a class="btn btn--give" href="/give?for=summit">Sponsor a mother’s place</a>
+      <a class="btn btn--line" href="/contact">Ask about dates</a>
+    </div>
+  </PageHeader>
+
+  <section class="band">
+    <div class="wrap split">
+      <div class="stack">
+        <h2 class="h2">Where every mother’s journey begins</h2>
+        <div class="prose">
+          <p>Every year we gather young mothers aged 19 and under for the summit. They hear that whatever has happened to them, they can still become what they dreamed of being — that they are loved, and that God is not finished with them.</p>
+          <p>The summit is also how we find mothers who are hidden away, often in their grandparents’ homes after being sent away by their parents. After the summit, each mother joins our one-year formation program.</p>
+          <p>Our first summit, in 2017, welcomed 36 mothers to our unfinished home. By 2021, sixty mothers came with their children, and we needed a bigger venue.</p>
+        </div>
+        <a class="link-more" href="/stories/help-mothers-discover-their-inner-worth">Read about a past summit <Icon name="arrow" size={18} /></a>
+      </div>
+      <Photo name="summit" alt="Your Worth Summit 2026 poster: Rescued for a Purpose" ratio="square" sizes="(max-width: 860px) 100vw, 45vw" widths={[480, 800]} />
+    </div>
+  </section>
+</Base>

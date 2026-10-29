@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import GiveBand from '../../components/GiveBand.astro';
+import { getStories } from '../../lib/supabase';
+const stories = await getStories();
+---
+<Base
+  title="Stories and News from Masaka, Uganda"
+  description="Stories, news and reflections from Smile Again Families: teenage mothers, volunteers, the Your Worth Summit and life at the Guadalupe Safe Home in Masaka, Uganda."
+  image="story-2"
+>
+  <PageHeader
+    title="Stories from Masaka"
+    lead="News from the field, reflections from our volunteers, and the voices of the mothers we serve."
+    crumbs={[{ label: 'Stories' }]}
+  />
+  <section class="band">
+    <div class="wrap grid">
+      {stories.map((s) => <StoryCard story={s} headingLevel="h2" />)}
+    </div>
+  </section>
+  <GiveBand />
+</Base>
+<style>
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px 36px; }
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 620px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+</style>

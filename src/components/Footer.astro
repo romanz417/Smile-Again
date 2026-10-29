@@ -1,0 +1,84 @@
+---
+import { org } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap footer__top">
+    <div class="footer__news">
+      <h2>Letters from Masaka</h2>
+      <p>A short email every few months with stories from the mothers, news from the Safe Home, and ways to help.</p>
+      <form class="inline-form" data-subscribe novalidate style="margin-top:18px">
+        <label class="sr-only" for="footer-email">Email address</label>
+        <input class="input" id="footer-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="btn btn--give" type="submit">Subscribe</button>
+      </form>
+      <p class="status small" role="status" aria-live="polite" style="margin-top:10px"></p>
+    </div>
+    <div>
+      <h2>Our work</h2>
+      <ul>
+        <li><a href="/our-work/safe-home">Guadalupe Safe Home</a></li>
+        <li><a href="/our-work/back-to-school">Back to School</a></li>
+        <li><a href="/our-work/livelihoods">Livelihoods</a></li>
+        <li><a href="/our-work/health">Maternal &amp; child health</a></li>
+        <li><a href="/our-work/solidarity-groups">Solidarity groups</a></li>
+        <li><a href="/our-work/prevention">Prevention in schools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Get involved</h2>
+      <ul>
+        <li><a href="/give">Donate</a></li>
+        <li><a href="/sponsor">Sponsor a young mother</a></li>
+        <li><a href="/volunteer">Volunteer &amp; mission trips</a></li>
+        <li><a href="/events">Your Worth Summit</a></li>
+        <li><a href="/stories">Stories</a></li>
+        <li><a href="/about">About us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Contact</h2>
+      <ul>
+        <li><a href={`mailto:${org.email}`}>{org.email}</a></li>
+        <li><a href={org.phoneHref}>{org.phone}</a></li>
+        <li>{org.street}<br />{org.city}, {org.country}</li>
+        {org.socials.map((s) => <li><a href={s.href} rel="noopener">{s.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer__legal">
+    <span>© {year} {org.name}. Registered in Uganda since {org.registered}.</span>
+    <span>US gifts: {org.usEntity}, {org.usCity} · EIN {org.usEin}</span>
+    <a href="/privacy">Privacy policy</a>
+  </div>
+</footer>
+
+<script>
+  import { supabase } from '../lib/supabase';
+  document.querySelectorAll<HTMLFormElement>('form[data-subscribe]').forEach((form) => {
+    const status = form.parentElement!.querySelector<HTMLElement>('.status')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      if (data.get('website')) return;
+      const email = String(data.get('email') || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        status.dataset.state = 'error';
+        status.textContent = 'Enter a valid email address, like name@example.com.';
+        return;
+      }
+      status.dataset.state = '';
+      status.textContent = 'Subscribing…';
+      const res = supabase ? await supabase.from('subscribers').insert({ email }) : { error: { code: 'offline' } };
+      if (res.error && (res.error as { code?: string }).code !== '23505') {
+        status.dataset.state = 'error';
+        status.textContent = 'We couldn’t add you just now. Please try again, or email us to subscribe.';
+        return;
+      }
+      form.reset();
+      status.dataset.state = 'ok';
+      status.textContent = 'You’re subscribed. Thank you for following the mothers’ journey.';
+    });
+  });
+</script>

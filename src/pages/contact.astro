@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { org } from '../data/site';
+---
+<Base
+  title="Contact Us"
+  description="Contact Smile Again Families Foundation in Masaka, Uganda about sponsorship, volunteering, partnerships or our programs for teenage mothers."
+  image="story-2"
+>
+  <PageHeader
+    title="Get in touch"
+    lead="Questions about sponsoring a young mother, volunteering, partnering with us or our programs? We’d love to hear from you."
+    crumbs={[{ label: 'Contact' }]}
+  />
+  <section class="band">
+    <div class="wrap split split--top split--wide-right">
+      <div class="stack">
+        <h2 class="h3">Contact details</h2>
+        <ul class="contact-list">
+          <li><Icon name="mail" /><a href={`mailto:${org.email}`}>{org.email}</a></li>
+          <li><Icon name="phone" /><a href={org.phoneHref}>{org.phone}</a> <span class="muted small">(East Africa Time, UTC+3)</span></li>
+          <li><Icon name="pin" /><span>{org.street}<br />{org.city}, {org.country}</span></li>
+        </ul>
+        <p class="small muted">US donations are received by {org.usEntity}, {org.usCity}.</p>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+<style>
+  .contact-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+  .contact-list li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .contact-list svg { margin-top: 4px; color: var(--leaf); }
+  .contact-list a { word-break: break-word; }
+</style>

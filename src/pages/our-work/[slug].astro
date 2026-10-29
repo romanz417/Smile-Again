@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import GiveBand from '../../components/GiveBand.astro';
+import { programs, type Program } from '../../data/programs';
+import { students } from '../../data/people';
+
+export function getStaticPaths() {
+  return programs.map((p) => ({ params: { slug: p.slug }, props: { program: p } }));
+}
+const { program: p } = Astro.props as { program: Program };
+const others = programs.filter((x) => x.slug !== p.slug).slice(0, 3);
+const giveHref = p.slug === 'back-to-school' ? '/sponsor' : `/give?for=${p.slug}`;
+const ld = [{
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Our work', item: new URL('/our-work', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: p.name, item: new URL(`/our-work/${p.slug}`, Astro.site).href },
+  ],
+}];
+---
+<Base title={p.seoTitle} description={p.description} image={p.cover} jsonLd={ld}>
+  <PageHeader title={p.name} lead={p.intro} crumbs={[{ label: 'Our work', href: '/our-work' }, { label: p.name }]} image={p.cover} imageAlt={p.coverAlt}>
+    <div class="btns" style="margin-top:32px">
+      <a class="btn btn--give" href={giveHref}>{p.give}</a>
+    </div>
+  </PageHeader>
+
+  <section class="band">
+    <div class="wrap split split--top split--wide-left">
+      <div class="prose">
+        {p.body.map((t) => <p>{t}</p>)}
+      </div>
+      <aside class="aside">
+        <h2 class="h4" style="margin-bottom:18px">What this program does</h2>
+        <ul class="ticks">{p.whatWeDo.map((w) => <li><Icon name="check" /><span>{w}</span></li>)}</ul>
+      </aside>
+    </div>
+  </section>
+
+  {p.gallery.length > 0 && (
+    <section class="band band--sage" aria-label="Photos">
+      <div class="wrap gallery" data-count={p.gallery.length}>
+        {p.gallery.map((g) => <Photo name={g.src} alt={g.alt} ratio="wide" sizes="(max-width: 860px) 100vw, 33vw" widths={[480, 800]} />)}
+      </div>
+    </section>
+  )}
+
+  {p.goals && (
+    <section class="band">
+      <div class="wrap wrap--narrow">
+        <h2 class="h2" style="margin-bottom:24px">{p.slug === 'safe-home' ? 'Where we are now' : 'Our goals each year'}</h2>
+        <ul class="ticks lead">{p.goals.map((g) => <li><Icon name="check" /><span>{g}</span></li>)}</ul>
+      </div>
+    </section>
+  )}
+
+  {p.slug === 'back-to-school' && (
+    <section class="band">
+      <div class="wrap">
+        <div class="row-between" style="margin-bottom:40px">
+          <h2 class="h2">Students waiting for a sponsor</h2>
+          <a class="link-more" href="/sponsor">How sponsorship works <Icon name="arrow" size={18} /></a>
+        </div>
+        <ul class="mini-students">
+          {students.slice(0, 5).map((s) => (
+            <li><a href={`/sponsor#${s.name.toLowerCase()}`}>
+              <Photo name={s.photo} alt="" ratio="square" sizes="160px" widths={[320]} position="50% 25%" />
+              <strong>{s.name}</strong><span class="small muted">{s.level}</span>
+            </a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="band band--sage">
+    <div class="wrap">
+      <h2 class="h3" style="margin-bottom:32px">More of our work</h2>
+      <ul class="more">
+        {others.map((o) => (
+          <li><a href={`/our-work/${o.slug}`}>
+            <Photo name={o.cover} alt="" ratio="wide" sizes="(max-width: 860px) 100vw, 33vw" widths={[480, 800]} />
+            <strong class="h4">{o.name}</strong>
+            <span class="small">{o.summary}</span>
+          </a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <GiveBand give={p.give} giveHref={giveHref} />
+</Base>
+
+<style>
+  .aside { background: var(--sage); border-radius: var(--radius); padding: 32px; }
+  .gallery { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gallery[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 760px) { .gallery, .gallery[data-count="2"] { grid-template-columns: minmax(0, 1fr); } }
+  .mini-students { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 24px; }
+  .mini-students a { display: grid; gap: 4px; text-decoration: none; color: var(--ink); }
+  .mini-students :global(.ph) { border-radius: var(--arch); margin-bottom: 10px; }
+  .more { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .more a { display: grid; gap: 8px; text-decoration: none; color: var(--ink); }
+  .more :global(.ph) { margin-bottom: 8px; }
+  .more .small { color: var(--body); }
+  .more a:hover strong { color: var(--leaf); text-decoration: underline; }
+  @media (max-width: 860px) { .more { grid-template-columns: minmax(0, 1fr); } }
+</style>

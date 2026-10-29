@@ -1,0 +1,36 @@
+---
+import { Picture } from 'astro:assets';
+import { photo } from '../lib/photos';
+
+interface Props {
+  name: string;
+  alt: string;
+  shape?: 'arch' | 'plain';
+  ratio?: 'tall' | 'wide' | 'cine' | 'square' | 'free';
+  sizes?: string;
+  widths?: number[];
+  eager?: boolean;
+  class?: string;
+  position?: string;
+}
+const {
+  name, alt, shape = 'plain', ratio = 'wide', sizes = '(max-width: 860px) 100vw, 50vw',
+  widths = [480, 800, 1100, 1500], eager = false, class: cls = '', position,
+} = Astro.props;
+const src = photo(name);
+const usable = widths.filter((w) => w <= src.width);
+if (!usable.length) usable.push(src.width);
+---
+<div class:list={['ph', { 'ph--arch': shape === 'arch' }, ratio !== 'free' && `ph--${ratio}`, cls]}>
+  <Picture
+    src={src}
+    alt={alt}
+    widths={usable}
+    sizes={sizes}
+    formats={['avif']}
+    fallbackFormat="webp"
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+    style={position ? `object-position:${position}` : undefined}
+  />
+</div>

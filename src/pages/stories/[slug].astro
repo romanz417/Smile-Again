@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import GiveBand from '../../components/GiveBand.astro';
+import { getStories, formatDate } from '../../lib/supabase';
+import type { Story } from '../../data/stories';
+import { hasPhoto } from '../../lib/photos';
+
+export async function getStaticPaths() {
+  const all = await getStories();
+  return all.map((s) => ({ params: { slug: s.slug }, props: { story: s, all } }));
+}
+const { story: s, all } = Astro.props as { story: Story; all: Story[] };
+const more = all.filter((x) => x.slug !== s.slug).slice(0, 3);
+const paras = s.body.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+const ld = [{
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: s.title,
+  description: s.excerpt,
+  datePublished: s.published_at,
+  author: { '@type': s.author?.includes('Smile Again') ? 'Organization' : 'Person', name: s.author || 'Smile Again Families' },
+  publisher: { '@id': new URL('/#organization', Astro.site).href },
+  mainEntityOfPage: new URL(`/stories/${s.slug}`, Astro.site).href,
+}];
+---
+<Base title={s.title} description={s.excerpt} image={hasPhoto(s.cover_image) ? s.cover_image : undefined} type="article" jsonLd={ld}>
+  <article>
+    <header class="post-head">
+      <div class="wrap wrap--narrow">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/stories">Stories</a></li></ol></nav>
+        <h1 class="h1">{s.title}</h1>
+        <p class="muted" style="margin-top:18px">
+          <time datetime={s.published_at}>{formatDate(s.published_at)}</time>{s.author && <span>, by {s.author}</span>}
+        </p>
+      </div>
+    </header>
+    {hasPhoto(s.cover_image) && (
+      <div class="wrap wrap--narrow" style="margin-top:-56px">
+        <Photo name={s.cover_image} alt="" ratio="wide" eager sizes="(max-width: 860px) 100vw, 800px" widths={[480, 800, 1100]} />
+      </div>
+    )}
+    <div class="wrap wrap--narrow band" style="padding-top:56px">
+      <div class="prose post-body">
+        {paras.map((p) => (p.startsWith('“') && p.length < 260 ? <blockquote><p>{p}</p></blockquote> : <p>{p}</p>))}
+      </div>
+    </div>
+  </article>
+  {more.length > 0 && (
+    <section class="band band--sage">
+      <div class="wrap">
+        <h2 class="h3" style="margin-bottom:32px">More stories</h2>
+        <div class="more">{more.map((m) => <StoryCard story={m} />)}</div>
+      </div>
+    </section>
+  )}
+  <GiveBand />
+</Base>
+<style>
+  .post-head { background: var(--sage); padding-block: clamp(48px, 7vw, 88px) 104px; }
+  .post-body { font-size: 20px; line-height: 1.7; max-width: none; }
+  .more { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
+  @media (max-width: 860px) { .more { grid-template-columns: minmax(0, 1fr); } }
+</style>

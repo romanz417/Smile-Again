@@ -1,0 +1,79 @@
+---
+interface Props { defaultType?: 'general' | 'volunteer' | 'sponsor' | 'partner'; submitLabel?: string; }
+const { defaultType = 'general', submitLabel = 'Send message' } = Astro.props;
+const types = [
+  ['general', 'Ask a question'],
+  ['sponsor', 'Sponsor a young mother'],
+  ['volunteer', 'Volunteer or join a mission trip'],
+  ['partner', 'Partner with Smile Again'],
+];
+---
+<form class="form-grid contact-form" data-default-type={defaultType} novalidate>
+  <div class="field">
+    <label for="cf-type">I’d like to</label>
+    <select class="select" id="cf-type" name="type">
+      {types.map(([v, l]) => <option value={v} selected={v === defaultType}>{l}</option>)}
+    </select>
+  </div>
+  <div class="form-grid form-grid--2">
+    <div class="field"><label for="cf-first">First name</label><input class="input" id="cf-first" name="first_name" autocomplete="given-name" required /></div>
+    <div class="field"><label for="cf-last">Last name</label><input class="input" id="cf-last" name="last_name" autocomplete="family-name" /></div>
+  </div>
+  <div class="form-grid form-grid--2">
+    <div class="field"><label for="cf-email">Email</label><input class="input" id="cf-email" name="email" type="email" autocomplete="email" required /></div>
+    <div class="field"><label for="cf-phone">Phone <span class="muted">(optional)</span></label><input class="input" id="cf-phone" name="phone" type="tel" autocomplete="tel" /></div>
+  </div>
+  <div class="field">
+    <label for="cf-message">Message</label>
+    <textarea class="textarea" id="cf-message" name="message" required></textarea>
+  </div>
+  <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <div>
+    <button class="btn btn--solid" type="submit">{submitLabel}</button>
+    <p class="status" role="status" aria-live="polite" style="margin-top:14px"></p>
+  </div>
+</form>
+
+<script>
+  import { supabase } from '../lib/supabase';
+  document.querySelectorAll<HTMLFormElement>('form.contact-form').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const typeSel = form.elements.namedItem('type') as HTMLSelectElement;
+    const q = new URLSearchParams(location.search).get('type');
+    if (q && [...typeSel.options].some((o) => o.value === q)) typeSel.value = q;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      if (d.website) return;
+      const missing = [];
+      if (!d.first_name?.trim()) missing.push('your first name');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email || '')) missing.push('a valid email');
+      if (!d.message?.trim()) missing.push('a message');
+      if (missing.length) {
+        status.dataset.state = 'error';
+        status.textContent = `Please add ${missing.join(', ')}.`;
+        return;
+      }
+      const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      button.disabled = true;
+      status.dataset.state = '';
+      status.textContent = 'Sending…';
+      const row = {
+        type: d.type, first_name: d.first_name.trim(), last_name: d.last_name?.trim() || null,
+        email: d.email.trim(), phone: d.phone?.trim() || null, message: d.message.trim(),
+      };
+      const { error } = supabase ? await supabase.from('contact_messages').insert(row) : { error: new Error('offline') };
+      button.disabled = false;
+      if (error) {
+        status.dataset.state = 'error';
+        status.textContent = 'Your message didn’t send. Please try again, or email smileagain.families@gmail.com.';
+        return;
+      }
+      form.reset();
+      typeSel.value = form.dataset.defaultType || 'general';
+      status.dataset.state = 'ok';
+      status.textContent = 'Message sent. Our team in Masaka will reply by email within a few days.';
+    });
+  });
+</script>
