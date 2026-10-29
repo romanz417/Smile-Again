@@ -1,5 +1,7 @@
 ---
 import Photo from './Photo.astro';
+import { Picture } from 'astro:assets';
+import { photo } from '../lib/photos';
 
 interface Props {
   title: string;
@@ -8,10 +10,14 @@ interface Props {
   image?: string;
   imageAlt?: string;
   position?: string;
+  /** Optional faded background photo behind the heading. */
+  bg?: string;
+  bgPosition?: string;
 }
-const { title, lead, crumbs = [], image, imageAlt = '', position } = Astro.props;
+const { title, lead, crumbs = [], image, imageAlt = '', position, bg, bgPosition = '50% 50%' } = Astro.props;
 ---
-<section class="page-head">
+<section class:list={['page-head', { 'page-head--bg': bg }]}>
+  {bg && <Picture src={photo(bg)} alt="" widths={[800, 1200, 1800]} sizes="100vw" formats={['avif']} fallbackFormat="webp" class="page-head__bg" loading="eager" style={`object-position:${bgPosition}`} />}
   <div class:list={['wrap', image ? 'split split--wide-left' : 'wrap--narrow']}>
     <div class="page-head__text">
       {crumbs.length > 0 && (
@@ -37,6 +43,9 @@ const { title, lead, crumbs = [], image, imageAlt = '', position } = Astro.props
 <style>
   .page-head { padding-block: clamp(48px, 7vw, 96px) clamp(56px, 8vw, 104px); background: var(--peach); }
   .page-head .split { align-items: start; }
+  .page-head--bg { position: relative; overflow: hidden; isolation: isolate; }
+  .page-head :global(.page-head__bg) { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; opacity: .12; filter: grayscale(.4); }
+  @media (max-width: 860px) { .page-head :global(.page-head__bg) { width: 230%; max-width: none; left: -65%; right: auto; } }
   .page-head :global(.ph--arch) { max-width: 460px; margin-left: auto; }
   @media (max-width: 860px) { .page-head :global(.ph--arch) { max-width: 360px; margin: 0 auto; } }
 </style>
