@@ -35,6 +35,7 @@ const orgLd = {
   telephone: org.phone,
   description: 'Smile Again Families Foundation restores abused and abandoned teenage mothers in Masaka, Uganda — emotionally, spiritually and economically.',
   address: { '@type': 'PostalAddress', streetAddress: org.street, addressLocality: org.city, addressCountry: 'UG' },
+  location: { '@type': 'Place', name: 'Smile Again Families Foundation: Mission Home', geo: { '@type': 'GeoCoordinates', latitude: org.geo.lat, longitude: org.geo.lng } },
   areaServed: { '@type': 'Place', name: 'Masaka, Uganda' },
   sameAs: org.socials.map((s) => s.href),
 };

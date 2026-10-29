@@ -1,38 +1,81 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHeader from '../components/PageHeader.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Icon from '../components/Icon.astro';
+import { Picture } from 'astro:assets';
+import { photo } from '../lib/photos';
 import { org } from '../data/site';
+
+const { lat, lng } = org.geo;
+const mapSrc = `https://maps.google.com/maps?q=${lat},${lng}&z=15&hl=en&output=embed`;
+const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Smile Again Families Foundation Mission Home, Masaka')}&query_place_id=${org.placeId}`;
 ---
 <Base
   title="Contact Us"
-  description="Contact Smile Again Families Foundation in Masaka, Uganda about sponsorship, volunteering, partnerships or our programs for teenage mothers."
+  description="Contact Smile Again Families Foundation in Masaka, Uganda about sponsorship, volunteering, partnerships or our programs for teenage mothers. Find us on Kajjasembe Drive, Masaka."
   image="story-2"
 >
-  <PageHeader
-    title="Get in touch"
-    lead="Questions about sponsoring a young mother, volunteering, partnering with us or our programs? We’d love to hear from you."
-    crumbs={[{ label: 'Contact' }]}
-  />
+  <section class="contact-hero">
+    <Picture src={photo('contact-bg')} alt="" widths={[800, 1200, 1800]} sizes="100vw" formats={['avif']} fallbackFormat="webp" class="contact-hero__bg" loading="eager" />
+    <div class="wrap contact-hero__text">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Contact</span></li></ol></nav>
+      <p class="eyebrow">Contact us</p>
+      <h1 class="h1">Get in touch</h1>
+      <p class="lead" style="margin-top:20px">Questions about sponsoring a young mother, volunteering, partnering with us or our programs? We’d love to hear from you.</p>
+    </div>
+  </section>
+
   <section class="band">
     <div class="wrap split split--top split--wide-right">
       <div class="stack">
         <h2 class="h3">Contact details</h2>
         <ul class="contact-list">
           <li><Icon name="mail" /><a href={`mailto:${org.email}`}>{org.email}</a></li>
-          <li><Icon name="phone" /><a href={org.phoneHref}>{org.phone}</a> <span class="muted small">(East Africa Time, UTC+3)</span></li>
-          <li><Icon name="pin" /><span>{org.street}<br />{org.city}, {org.country}</span></li>
+          <li><Icon name="phone" /><span><a href={org.phoneHref}>{org.phone}</a><br /><span class="muted small">East Africa Time (UTC+3)</span></span></li>
+          <li><Icon name="pin" /><span>Mission Home, {org.street}<br />{org.city}, {org.country}</span></li>
         </ul>
+        <div>
+          <h2 class="h4" style="margin-bottom:8px">Office hours</h2>
+          <p class="muted" style="margin:0">Monday to Friday, 8:30 AM – 5:00 PM<br />Closed on weekends</p>
+        </div>
         <p class="small muted">US donations are received by {org.usEntity}, {org.usCity}.</p>
       </div>
       <ContactForm />
     </div>
   </section>
+
+  <section class="band band--soft map-band" aria-labelledby="map-title">
+    <div class="wrap">
+      <div class="row-between" style="margin-bottom:28px">
+        <div>
+          <p class="eyebrow">Visit us</p>
+          <h2 class="h2" id="map-title">Find us in Masaka</h2>
+        </div>
+        <a class="btn btn--solid" href={directions} target="_blank" rel="noopener">Get directions</a>
+      </div>
+      <div class="map">
+        <iframe
+          src={mapSrc}
+          title="Map showing the Smile Again Families Foundation Mission Home on Kajjasembe Drive, Masaka, Uganda"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
 </Base>
+
 <style>
+  .contact-hero { position: relative; overflow: hidden; background: var(--peach); padding-block: clamp(64px, 9vw, 120px); isolation: isolate; }
+  .contact-hero :global(.contact-hero__bg) { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; opacity: .12; filter: grayscale(.4); }
+  .contact-hero__text { position: relative; }
+  .contact-hero__text > * { max-width: 760px; }
   .contact-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
   .contact-list li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 14px; align-items: start; }
-  .contact-list svg { margin-top: 4px; color: var(--leaf); }
+  .contact-list :global(svg) { margin-top: 4px; color: var(--leaf); }
   .contact-list a { word-break: break-word; }
+  .map { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line); background: var(--sage); aspect-ratio: 16 / 7; }
+  .map iframe { width: 100%; height: 100%; border: 0; display: block; }
+  @media (max-width: 760px) { .map { aspect-ratio: 4 / 5; } }
 </style>

@@ -12,6 +12,8 @@ export const org = {
   street: 'Kajansembe Drive, Masaka–Kyotera Road',
   city: 'Masaka',
   country: 'Uganda',
+  geo: { lat: -0.3486246, lng: 31.7182724 },
+  placeId: 'ChIJd81XSwCJ1xkRv8ZfkCjsbaM',
   socials: [
     { label: 'Facebook', href: 'https://www.facebook.com/smileagainfamiliesuganda' },
     { label: 'Instagram', href: 'https://www.instagram.com/smileagainfamiliesuganda/' },
