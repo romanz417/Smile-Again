@@ -1,5 +1,5 @@
 ---
-import { nav } from '../data/site';
+import { nav, org } from '../data/site';
 import Icon from './Icon.astro';
 import logo from '../assets/logo-mark.webp';
 import { Image } from 'astro:assets';
@@ -8,10 +8,19 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
 ---
 <a class="skip" href="#main">Skip to content</a>
+<div class="topbar">
+  <div class="wrap">
+    <div class="topbar__group">
+      <a href={org.phoneHref}><Icon name="phone" size={16} />{org.phone}</a>
+      <a href={`mailto:${org.email}`}><Icon name="mail" size={16} />{org.email}</a>
+    </div>
+    <span class="topbar__addr"><Icon name="pin" size={16} />{org.street}, {org.city}, {org.country}</span>
+  </div>
+</div>
 <header class="header" id="site-header">
   <div class="wrap header__bar">
     <a class="brand" href="/" aria-label="Smile Again Families Foundation, home">
-      <Image src={logo} alt="" height={48} loading="eager" />
+      <span class="brand__mark"><Image src={logo} alt="" height={40} loading="eager" /></span>
       <span>Smile Again<small>Families Foundation</small></span>
     </a>
     <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
@@ -46,6 +55,8 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href
   const btn = header.querySelector<HTMLButtonElement>('.menu-btn')!;
   btn.addEventListener('click', () => {
     const open = !header.hasAttribute('data-open');
+    const bar = document.querySelector<HTMLElement>('.topbar');
+    if (open && bar && window.scrollY < bar.offsetHeight) window.scrollTo(0, bar.offsetHeight);
     header.toggleAttribute('data-open', open);
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');

@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import Photo from '../components/Photo.astro';
 import Icon from '../components/Icon.astro';
 import StoryCard from '../components/StoryCard.astro';
-import GiveBand from '../components/GiveBand.astro';
 import { org, impact, ugandaFact } from '../data/site';
 import { programs, model } from '../data/programs';
 import { students } from '../data/people';
@@ -11,8 +10,19 @@ import { getStories } from '../lib/supabase';
 
 const stories = (await getStories()).slice(0, 3);
 const safeHome = programs[0];
-const others = programs.slice(1);
 const featured = ['Mourine', 'Florence', 'Sylvia'].map((n) => students.find((s) => s.name === n)!);
+const tiers = [
+  { amount: '$45', per: '/month', text: 'Supports a girl’s return to school' },
+  { amount: '$50', per: '/month', text: 'Provides essential care and counseling' },
+  { amount: '$100', per: '/month', text: 'Funds livelihood and skills training for a young mother', featured: true },
+  { amount: '$500', per: '/year', text: 'Helps sustain a mother in the Safe Home' },
+  { amount: '$1,000+', per: '', text: 'Transforms many lives across our programs' },
+];
+const levels = [
+  { name: 'Emotionally', warm: false, icon: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/>', text: 'One-on-one counseling, psychosocial support and solidarity groups, so no mother carries her story alone.' },
+  { name: 'Spiritually', warm: true, icon: '<path d="M12 2v6M9 5h6"/><path d="M12 8c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9z"/>', text: 'Faith-rooted formation with our partner parishes, helping each mother see the value of her life again.' },
+  { name: 'Economically', warm: false, icon: '<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-6h4v6"/>', text: 'Vocational and business training — tailoring, hairdressing, computer skills — for income that lasts.' },
+];
 ---
 <Base
   title="Smile Again Families Foundation | Hope for Teenage Mothers in Uganda"
@@ -21,60 +31,134 @@ const featured = ['Mourine', 'Florence', 'Sylvia'].map((n) => students.find((s) 
   <!-- Hero -->
   <section class="hero">
     <div class="wrap hero__grid">
-      <div class="hero__text">
-        <p class="hero__place rise">Masaka, Uganda. Since 2014.</p>
-        <h1 class="display rise rise-2">Every young mother deserves to smile again.</h1>
-        <p class="lead rise rise-3">We walk beside teenage mothers who have been abused and abandoned — restoring them emotionally, spiritually and economically, so they and their children can build a future with dignity.</p>
-        <div class="btns rise rise-3">
+      <div>
+        <p class="eyebrow">Masaka, Uganda · Since 2014</p>
+        <h1 class="display">Healing hearts, building futures — one family at a time.</h1>
+        <p class="lead hero__lead">We walk with abused and abandoned teenage mothers as they rediscover their worth, return to school, learn a skill, and build a stable life for their children.</p>
+        <div class="btns">
           <a class="btn btn--give" href="/give">Give monthly</a>
-          <a class="btn btn--line-light" href="/sponsor">Sponsor a mother’s education</a>
+          <a class="btn btn--line" href="/sponsor">Sponsor a mother</a>
         </div>
       </div>
-      <div class="hero__photo rise rise-2">
-        <Photo name="proj-girlchild" alt="A young mother in Masaka holding her baby" shape="arch" ratio="tall" eager sizes="(max-width: 860px) 80vw, 40vw" widths={[480, 800, 1100]} position="40% 50%" />
+      <div class="hero__media">
+        <Photo name="hero-big" alt="Three young children smiling outside a church in Masaka" ratio="free" eager class="hero__img ph--lg" sizes="(max-width: 860px) 100vw, 50vw" widths={[600, 900, 1200, 1500]} />
+        <div class="hero__badge"><strong>798</strong><span>young mothers’ lives transformed in ten years</span></div>
       </div>
     </div>
+  </section>
+
+  <!-- Impact band -->
+  <section class="stats" aria-label="Our impact">
     <div class="wrap">
-      <ul class="hero__trust" aria-label="About the foundation">
-        <li>Registered nonprofit in Uganda since {org.registered}</li>
-        <li>US gifts are tax-deductible through {org.usEntity} (EIN {org.usEin})</li>
-        <li>Serving with 8 Catholic parishes and FOCUS missionaries</li>
-      </ul>
+      {impact.map((s) => <div><strong>{s.value}</strong><span>{s.label}</span></div>)}
+    </div>
+  </section>
+
+  <!-- Who we are -->
+  <section class="band">
+    <div class="wrap about">
+      <div class="about__head">
+        <p class="eyebrow">Who we are</p>
+        <h2 class="h2">A family that started with one couple’s calling.</h2>
+        <Photo name="story-1" alt="Co-founders Fred and Stella" ratio="tall" sizes="(max-width: 860px) 80vw, 360px" widths={[480, 720]} class="about__photo" />
+      </div>
+      <div class="lead-block">
+        <p>In 2014, Fred and Stella — a Catholic couple in Masaka who were helping young adults embrace Christian marriage — kept meeting young women carrying a deep, unhealed wound: early pregnancy, often from rape or defilement, followed by abandonment or an early marriage.</p>
+        <p>They set out to find these girls and help them restore hope, through psychosocial support, vocational and business training, a return to school, and a way back into their families and communities.</p>
+        <div class="grid-cards" style="--min:240px;gap:20px;margin-top:32px">
+          <div class="panel" style="background:var(--sage)">
+            <h3>Our mission</h3>
+            <p>To support abused and abandoned teenage mothers to discover their inner worth by restoring them emotionally, spiritually and economically.</p>
+          </div>
+          <div class="panel" style="background:var(--peach)">
+            <h3>Our vision</h3>
+            <p>Strong, sustainable and reliable families that transform society for generations.</p>
+          </div>
+        </div>
+        <a class="link-more" href="/about" style="margin-top:28px">Read our full story <Icon name="arrow" size={18} /></a>
+      </div>
     </div>
   </section>
 
   <!-- The need -->
-  <section class="band">
-    <div class="wrap split split--wide-left">
-      <div>
-        <h2 class="h2">A pregnancy shouldn’t end a girl’s future.</h2>
-        <div class="need">
-          <p class="need__stat">{ugandaFact.stat}</p>
-          <p class="need__text">{ugandaFact.text}</p>
+  <section class="band band--soft">
+    <div class="wrap">
+      <div class="need">
+        <div>
+          <p class="eyebrow">Why it matters</p>
+          <h2 class="h2">A pregnancy shouldn’t end a girl’s future.</h2>
         </div>
-        <p class="small muted">Source: {ugandaFact.source}.</p>
-        <div class="prose" style="margin-top:28px">
-          <p>Many of the mothers we meet became pregnant through sexual abuse or exploitation, often after poverty forced them out of school. Too many are then sent away by their own families, who see the pregnancy as a shame.</p>
-          <p>Without help, a young mother and her child are pushed into a cycle of poverty, poor health and lost education. With the right support, that cycle can be broken in a single generation.</p>
+        <div class="need__stat">
+          <strong>{ugandaFact.stat}</strong>
+          <p>{ugandaFact.text}</p>
+          <p class="small muted">Source: {ugandaFact.source}.</p>
         </div>
-        <a class="link-more" href="/about" style="margin-top:20px">Read our story <Icon name="arrow" size={18} /></a>
       </div>
-      <Photo name="proj-0316" alt="A young mother speaking at a Smile Again gathering" ratio="tall" sizes="(max-width: 860px) 100vw, 40vw" widths={[480, 734]} />
+      <h3 class="h3" style="margin:64px 0 24px">Restoration happens on three levels.</h3>
+      <div class="grid-cards" style="--min:260px;gap:24px">
+        {levels.map((l) => (
+          <div class="card card--pad">
+            <span class:list={['icon-tile', { 'icon-tile--warm': l.warm }]}><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={l.icon} /></span>
+            <h3 class="h3" style="color:var(--ink)">{l.name}</h3>
+            <p>{l.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="band">
+    <div class="wrap">
+      <div class="row-between" style="margin-bottom:44px">
+        <div style="max-width:640px">
+          <p class="eyebrow">Our work</p>
+          <h2 class="h2">Six programs, one journey back to a full life.</h2>
+        </div>
+        <a class="link-more" href="/our-work">See all programs <Icon name="arrow" size={18} /></a>
+      </div>
+      <div class="grid-cards">
+        {programs.map((p) => (
+          <a class="card card-link" href={`/our-work/${p.slug}`}>
+            <Photo name={p.cover} alt={p.coverAlt} ratio="free" class="card-img" sizes="(max-width: 860px) 100vw, 33vw" widths={[480, 800]} />
+            <div class="card-link__body"><h3>{p.name}</h3><p>{p.summary}</p></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Safe Home -->
+  <section class="band band--forest">
+    <div class="wrap split">
+      <Photo name={safeHome.cover} alt={safeHome.coverAlt} ratio="free" class="safe__img ph--lg" sizes="(max-width: 860px) 100vw, 50vw" />
+      <div>
+        <p class="pill">Construction complete</p>
+        <h2 class="h2">The Guadalupe Mission Home is open. Now help us keep the lights on.</h2>
+        <p style="margin:22px 0 0">A safe place for abandoned mothers to live as a family, with daily care before and after birth, a training center for skills workshops, and a children’s day-care and play center.</p>
+        <ul class="checks">
+          {['Food', 'Medical care', 'School needs', 'Hygiene & childcare'].map((i) => <li><Icon name="check" size={18} />{i}</li>)}
+        </ul>
+        <div class="btns">
+          <a class="btn btn--give" href="/give?for=safe-home">Support Safe Home operations</a>
+          <a class="btn btn--line-light" href={`/our-work/${safeHome.slug}`}>Learn more</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Model -->
-  <section class="band band--sage">
+  <section class="band">
     <div class="wrap">
-      <div class="section-head">
+      <div style="max-width:720px;margin-bottom:44px">
+        <p class="eyebrow">Our model</p>
         <h2 class="h2">From crisis to self-reliance in two years.</h2>
-        <p class="lead">Each mother follows the same path, at her own pace. By the time her child turns two, our goal is for her to stand on her own.</p>
       </div>
       <ol class="model">
         {model.map((m, i) => (
-          <li>
+          <li class="card card--pad">
             <span class="model__num" aria-hidden="true">{i + 1}</span>
-            <h3 class="h3">{m.name}</h3>
+            <h3 class="h3" style="color:var(--ink)">{m.name}</h3>
             <p>{m.text}</p>
           </li>
         ))}
@@ -82,189 +166,139 @@ const featured = ['Mourine', 'Florence', 'Sylvia'].map((n) => students.find((s) 
     </div>
   </section>
 
-  <!-- Programs -->
-  <section class="band">
-    <div class="wrap">
-      <div class="row-head">
-        <div class="section-head" style="margin-bottom:0">
-          <h2 class="h2">How we help</h2>
-          <p class="lead">Six programs that meet a mother where she is — from her first night of safety to her first business.</p>
-        </div>
-        <a class="link-more" href="/our-work">See all programs <Icon name="arrow" size={18} /></a>
-      </div>
-
-      <a class="feature" href={`/our-work/${safeHome.slug}`}>
-        <Photo name={safeHome.cover} alt={safeHome.coverAlt} ratio="cine" sizes="(max-width: 860px) 100vw, 60vw" />
-        <div class="feature__text">
-          <p class="kicker">Now open</p>
-          <h3 class="h3">{safeHome.name}</h3>
-          <p>{safeHome.summary} Construction is complete — we are now raising support for its daily running costs.</p>
-          <span class="link-more">Visit the Safe Home <Icon name="arrow" size={18} /></span>
-        </div>
-      </a>
-
-      <ul class="programs">
-        {others.map((p) => (
-          <li>
-            <a href={`/our-work/${p.slug}`}>
-              <Photo name={p.cover} alt="" ratio="square" sizes="120px" widths={[240]} />
-              <span>
-                <strong class="h4">{p.name}</strong>
-                <span class="small">{p.summary}</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- A voice -->
-  <section class="band band--sage">
-    <div class="wrap split split--wide-right">
-      <Photo name="sp-sylvia" alt="Sylvia holding her daughter" shape="arch" ratio="tall" sizes="(max-width: 860px) 70vw, 30vw" widths={[420]} class="voice__photo" position="50% 45%" />
-      <figure class="voice">
-        <blockquote>
-          <p>“Thanks to Smile Again, I regained hope. Today I run my own fashion business, making clothes for women and children — and I support other teenage mothers.”</p>
-        </blockquote>
+  <!-- Voice -->
+  <section class="band band--soft">
+    <div class="wrap voice">
+      <Photo name="sp-sylvia" alt="Sylvia holding her daughter" ratio="square" sizes="240px" widths={[420]} position="50% 40%" class="voice__photo" />
+      <figure>
+        <blockquote>“Thanks to Smile Again, I regained hope. Today I run my own fashion business, making clothes for women and children — and I support other teenage mothers.”</blockquote>
         <figcaption><strong>Sylvia, 20</strong>, mother and fashion entrepreneur</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- Impact -->
-  <section class="band">
+  <!-- Giving -->
+  <section class="band band--peach" id="involved">
     <div class="wrap">
-      <h2 class="h2" style="max-width:16em">Ten years of quiet, faithful work.</h2>
-      <dl class="impact">
-        {impact.map((s) => (
-          <div><dt>{s.label}</dt><dd>{s.value}</dd></div>
+      <div style="text-align:center;max-width:720px;margin:0 auto 48px">
+        <p class="eyebrow">Get involved</p>
+        <h2 class="h2">Every gift walks with a mother.</h2>
+        <p class="lead" style="margin:18px auto 0">General donations cover food, childcare, school materials, counseling and the staff who walk alongside each young woman. US gifts are tax-deductible.</p>
+      </div>
+      <div class="grid-cards" style="--min:200px;gap:20px">
+        {tiers.map((t) => (
+          <div class:list={['tier', { 'tier--featured': t.featured }]}>
+            {t.featured && <span class="tier__flag">Most impact</span>}
+            <strong>{t.amount}{t.per && <small>{t.per}</small>}</strong>
+            <p>{t.text}</p>
+          </div>
         ))}
-      </dl>
+      </div>
+      <div class="btns" style="justify-content:center;margin-top:40px">
+        <a class="btn btn--give" href="/give">Give now</a>
+        <a class="btn btn--line" href="/volunteer">Volunteer with us</a>
+        <a class="btn btn--line" href="/sponsor">Sponsor a girl’s schooling</a>
+      </div>
+      <p class="small muted" style="text-align:center;margin-top:24px">US gifts: {org.usEntity}, EIN {org.usEin}</p>
     </div>
   </section>
 
   <!-- Sponsor -->
-  <section class="band band--sage">
+  <section class="band">
     <div class="wrap">
-      <div class="row-head">
-        <div class="section-head" style="margin-bottom:0">
+      <div class="row-between" style="margin-bottom:44px">
+        <div style="max-width:640px">
+          <p class="eyebrow">Sponsor a mother</p>
           <h2 class="h2">Send a young mother back to school.</h2>
-          <p class="lead">These women are ready to return to the classroom. Sponsoring one covers her tuition and school requirements, and you’ll receive updates on her progress.</p>
         </div>
         <a class="link-more" href="/sponsor">Meet all the students <Icon name="arrow" size={18} /></a>
       </div>
-      <ul class="students">
+      <div class="grid-cards" style="--min:260px">
         {featured.map((s) => (
-          <li>
-            <Photo name={s.photo} alt={`${s.name}, a young mother hoping to continue her studies`} ratio="tall" sizes="(max-width: 860px) 100vw, 30vw" widths={[420, 560]} position="50% 25%" />
-            <h3 class="h4">{s.name}</h3>
-            <p class="small muted">{s.level}, {s.needPerYear}</p>
-            <a class="btn btn--line btn--sm" href={`/sponsor#${s.name.toLowerCase()}`}>Read {s.name}’s story</a>
-          </li>
+          <a class="card card-link" href={`/sponsor#${s.name.toLowerCase()}`}>
+            <Photo name={s.photo} alt={`${s.name}, a young mother hoping to continue her studies`} ratio="free" class="card-img card-img--tall" sizes="(max-width: 860px) 100vw, 33vw" widths={[420, 560]} position="50% 25%" />
+            <div class="card-link__body"><h3>{s.name}</h3><p>{s.level}, {s.needPerYear}</p></div>
+          </a>
         ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- Volunteers -->
-  <section class="band">
-    <div class="wrap split">
-      <Photo name="focus-1" alt="FOCUS missionaries serving a meal with mothers in Masaka" ratio="wide" sizes="(max-width: 860px) 100vw, 50vw" />
-      <div class="stack">
-        <h2 class="h2">Come and serve with us in Uganda.</h2>
-        <p class="lead">Every year, missionaries from FOCUS and individual volunteers join our team in Masaka for mentorship, discipleship, childcare and outreach. Commitments start at one week.</p>
-        <a class="btn btn--solid" href="/volunteer">Explore volunteering</a>
       </div>
     </div>
   </section>
 
   <!-- Stories -->
-  <section class="band band--sage">
+  <section class="band band--soft">
     <div class="wrap">
-      <div class="row-head" style="margin-bottom:48px">
-        <h2 class="h2">Stories from Masaka</h2>
+      <div class="row-between" style="margin-bottom:40px">
+        <h2 class="h2">Stories &amp; updates</h2>
         <a class="link-more" href="/stories">All stories <Icon name="arrow" size={18} /></a>
       </div>
-      <div class="story-grid">
+      <div class="grid-cards" style="--min:290px">
         {stories.map((s) => <StoryCard story={s} />)}
       </div>
     </div>
   </section>
-
-  <GiveBand />
 </Base>
 
 <style>
-  .hero { background: var(--forest); color: var(--on-dark); padding-block: clamp(40px, 6vw, 80px) 0; overflow: hidden; }
-  .hero__grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); align-items: end; }
-  .hero__text { padding-bottom: clamp(32px, 6vw, 96px); }
-  .hero h1 { color: #fff; }
-  .hero .lead { color: var(--on-dark); margin: 28px 0 36px; }
-  .hero__place { font-weight: 700; color: var(--shirt); margin-bottom: 22px; }
-  .hero__photo { align-self: end; }
-  .hero__photo :global(.ph--arch) { border-radius: 999px 999px 0 0; max-width: 520px; margin-left: auto; }
-  .hero__trust { list-style: none; margin: 0; padding: 22px 0 26px; border-top: 1px solid rgba(255,255,255,.16); display: flex; flex-wrap: wrap; gap: 10px 36px; font-size: 16px; color: var(--on-dark-muted); }
-  .hero__trust li { display: flex; gap: 10px; align-items: center; }
-  .hero__trust li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--shirt); flex: none; }
+  .hero { background: var(--peach); }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: center; padding-block: 64px 88px; }
+  .hero__lead { margin: 24px 0 36px; font-size: 21px; max-width: 560px; }
+  .hero__media { position: relative; }
+  .hero__media :global(.hero__img) { height: 540px; }
+  .hero__badge { position: absolute; left: -16px; bottom: -28px; background: #fff; border-radius: 20px; padding: 18px 22px; box-shadow: 0 12px 32px rgba(23,32,27,.14); display: flex; gap: 14px; align-items: center; max-width: 310px; }
+  .hero__badge strong { font-family: var(--display); font-weight: 800; font-size: 42px; color: var(--forest); line-height: 1; }
+  .hero__badge span { font-size: 15px; line-height: 1.35; color: var(--body); }
   @media (max-width: 860px) {
-    .hero__grid { grid-template-columns: minmax(0, 1fr); }
-    .hero__text { padding-bottom: 0; }
-    .hero__photo :global(.ph--arch) { max-width: 380px; margin: 0 auto; }
+    .hero__grid { grid-template-columns: minmax(0, 1fr); padding-block: 48px 72px; }
+    .hero__media :global(.hero__img) { height: 360px; }
+    .hero__badge { left: 12px; }
   }
 
-  .need { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 28px; align-items: center; margin: 36px 0 12px; padding: 28px 0; border-block: 1px solid var(--line); }
-  .need__stat { font-family: var(--serif); font-size: clamp(64px, 8vw, 104px); line-height: .9; font-weight: 600; color: var(--leaf); margin: 0; letter-spacing: -0.03em; }
-  .need__text { margin: 0; font-size: 20px; color: var(--ink); max-width: 22em; }
-  @media (max-width: 560px) { .need { grid-template-columns: minmax(0, 1fr); } }
+  .stats { background: var(--forest); color: #fff; }
+  .stats .wrap { padding-block: 56px; display: grid; gap: 32px; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .stats strong { display: block; font-family: var(--display); font-weight: 800; font-size: 52px; line-height: 1; }
+  .stats span { display: block; margin-top: 8px; color: var(--on-dark-muted); font-size: 17px; line-height: 1.4; }
+  @media (max-width: 960px) { .stats .wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stats strong { font-size: 42px; } }
 
-  .model { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; position: relative; }
-  .model::before { content: ""; position: absolute; top: 27px; left: 28px; right: 28px; height: 2px; background: var(--sage-2); }
-  .model li { position: relative; }
-  .model__num { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--forest); color: #fff; font-family: var(--serif); font-size: 24px; font-weight: 600; margin-bottom: 22px; position: relative; }
-  .model h3 { margin-bottom: 10px; }
-  .model p { color: var(--body); }
-  @media (max-width: 860px) { .model { grid-template-columns: minmax(0, 1fr); gap: 32px; } .model::before { top: 28px; bottom: 28px; left: 27px; right: auto; width: 2px; height: auto; } .model li { padding-left: 80px; } .model__num { position: absolute; left: 0; top: 0; } }
+  .about { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; }
+  .about__head :global(.about__photo) { max-width: 360px; margin-top: 36px; }
+  .lead-block { color: var(--body); }
+  .lead-block > p { margin-bottom: 20px; }
+  @media (max-width: 860px) { .about { grid-template-columns: minmax(0, 1fr); } }
 
-  .row-head { display: flex; flex-wrap: wrap; gap: 20px 40px; justify-content: space-between; align-items: end; margin-bottom: clamp(36px, 5vw, 56px); }
+  .need { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+  .need__stat { background: #fff; border-radius: var(--radius); padding: 32px; border: 1px solid var(--line); }
+  .need__stat strong { display: block; font-family: var(--display); font-weight: 800; font-size: clamp(56px, 7vw, 88px); line-height: 1; color: var(--shirt); }
+  .need__stat p:not(.small) { font-size: 20px; color: var(--ink); margin: 12px 0; }
+  @media (max-width: 860px) { .need { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
 
-  .feature { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 0; text-decoration: none; color: var(--ink); background: var(--forest); border-radius: var(--radius); overflow: hidden; }
-  .feature :global(.ph) { border-radius: 0; height: 100%; }
-  .feature__text { padding: clamp(28px, 4vw, 48px); align-self: center; color: var(--on-dark); }
-  .feature__text h3 { color: #fff; margin-bottom: 12px; }
-  .feature .kicker { color: var(--shirt); }
-  .feature .link-more { color: #fff; margin-top: 18px; }
-  .feature:hover .link-more { text-decoration: underline; }
-  @media (max-width: 860px) { .feature { grid-template-columns: minmax(0, 1fr); } }
+  .grid-cards :global(.card-img) { height: 230px; }
+  .grid-cards :global(.card-img--tall) { height: 340px; }
 
-  .programs { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
-  .programs li { border-bottom: 1px solid var(--line); }
-  .programs a { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 22px; align-items: center; padding: 22px 0; text-decoration: none; color: var(--ink); }
-  .programs a :global(.ph) { border-radius: 999px 999px 10px 10px; }
-  .programs strong { display: block; margin-bottom: 4px; }
-  .programs .small { color: var(--body); }
-  .programs a:hover strong { color: var(--leaf); text-decoration: underline; }
-  @media (max-width: 760px) { .programs { grid-template-columns: minmax(0, 1fr); } .programs a { grid-template-columns: 76px minmax(0, 1fr); } }
+  .band--forest :global(.safe__img) { height: 460px; }
+  @media (max-width: 860px) { .band--forest :global(.safe__img) { height: 300px; } }
+  .checks { list-style: none; padding: 0; margin: 24px 0 34px; display: grid; gap: 10px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); font-weight: 600; color: #fff; }
+  .checks li { display: flex; gap: 10px; align-items: center; }
+  .checks :global(svg) { color: #F4A261; }
 
-  .voice { margin: 0; }
-  .voice blockquote { margin: 0; }
-  .voice blockquote p { font-family: var(--serif); font-size: clamp(28px, 3.2vw, 42px); line-height: 1.25; color: var(--forest); font-weight: 500; letter-spacing: -0.015em; }
-  .voice figcaption { font-size: 18px; margin-top: 26px; color: var(--body); }
-  .band :global(.voice__photo) { max-width: 360px; }
+  .model { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .model__num { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--forest); color: #fff; font-family: var(--display); font-weight: 800; font-size: 22px; margin-bottom: 20px; }
+  .model p { color: var(--body); font-size: 17px; margin: 8px 0 0; }
+  @media (max-width: 860px) { .model { grid-template-columns: minmax(0, 1fr); } }
 
-  .impact { margin: 48px 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--forest); }
-  .impact div { display: flex; flex-direction: column-reverse; justify-content: start; gap: 10px; padding: 26px 24px 0 0; }
-  .impact div + div { padding-left: 24px; border-left: 1px solid var(--line); }
-  .impact dd { margin: 0; font-family: var(--serif); font-size: clamp(40px, 4.4vw, 58px); font-weight: 600; line-height: 1; color: var(--forest); letter-spacing: -0.02em; }
-  .impact dt { font-size: 17px; color: var(--body); }
-  @media (max-width: 960px) { .impact { grid-template-columns: repeat(2, minmax(0, 1fr)); } .impact div, .impact div + div { padding: 24px 16px 24px 0; border-left: 0; border-bottom: 1px solid var(--line); } }
+  .voice { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; align-items: center; max-width: 1040px; }
+  .voice :global(.voice__photo) { border-radius: 50%; }
+  .voice figure { margin: 0; }
+  .voice blockquote { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3vw, 36px); line-height: 1.25; color: var(--forest); letter-spacing: -0.015em; }
+  .voice figcaption { margin-top: 20px; color: var(--body); }
+  @media (max-width: 760px) { .voice { grid-template-columns: minmax(0, 1fr); } .voice :global(.voice__photo) { max-width: 180px; } }
 
-  .students { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
-  .students li { display: grid; gap: 8px; justify-items: start; }
-  .students :global(.ph) { width: 100%; margin-bottom: 10px; border-radius: var(--arch); }
-  .students .btn { margin-top: 8px; }
-  @media (max-width: 860px) { .students { grid-template-columns: minmax(0, 1fr); max-width: 420px; } }
-
-  .story-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
-  @media (max-width: 860px) { .story-grid { grid-template-columns: minmax(0, 1fr); } }
+  .tier { background: #fff; border: 1px solid var(--peach-line); border-radius: var(--radius); padding: 28px; position: relative; }
+  .tier strong { font-family: var(--display); font-weight: 800; font-size: 38px; color: var(--forest); }
+  .tier strong small { font-size: 18px; font-weight: 500; color: var(--muted); }
+  .tier p { margin: 10px 0 0; font-size: 17px; color: var(--body); }
+  .tier--featured { background: var(--forest); border-color: var(--forest); }
+  .tier--featured strong { color: #fff; }
+  .tier--featured strong small { color: var(--on-dark-muted); }
+  .tier--featured p { color: var(--on-dark); }
+  .tier__flag { position: absolute; top: -13px; left: 28px; background: var(--shirt); color: var(--ink); font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
 </style>
