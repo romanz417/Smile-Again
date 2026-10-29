@@ -10,6 +10,7 @@ const tiers = [
   { amount: 50, text: 'a month provides essential care and counseling' },
   { amount: 100, text: 'a month funds livelihood and skills training for a mother' },
   { amount: 500, text: 'a year helps sustain a mother in the Safe Home' },
+  { amount: 1000, label: '$1,000+', text: 'transforms multiple lives across our programs', wide: true },
 ];
 const designations = [
   ['general', 'Where it’s needed most'],
@@ -45,7 +46,8 @@ const faqs = [
       <div class="give__intro">
         <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Donate</span></li></ol></nav>
         <h1 class="h1 rise">Help a young mother smile again.</h1>
-        <p class="lead rise rise-2" style="margin-top:22px">Your gift reaches mothers and children directly: food, childcare, school materials and counseling, and the staff who walk beside each woman as she rebuilds her life.</p>
+        <p class="lead rise rise-2" style="margin-top:22px">Your gift reaches mothers and children directly: food, childcare, school materials and counseling, and the staff who walk beside each woman as she rebuilds her life with dignity and hope.</p>
+        <p class="rise rise-2 give__note">Every donation, big or small, plays a vital role in advancing the mission.</p>
         <div class="slides give__photo rise rise-3" role="region" aria-roledescription="carousel" aria-label="Mothers we serve">
           {slides.map((sl, i) => (
             <div class="slide" data-active={i === 0 ? 'true' : 'false'} aria-hidden={i === 0 ? 'false' : 'true'} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
@@ -69,8 +71,8 @@ const faqs = [
           <legend>Amount (USD)</legend>
           <div class="amounts">
             {tiers.map((t, i) => (
-              <button type="button" class="amount" data-amount={t.amount} aria-pressed={i === 2 ? 'true' : 'false'}>
-                <strong>${t.amount}</strong><span>{t.text}</span>
+              <button type="button" class:list={['amount', { 'amount--wide': t.wide }]} data-amount={t.amount} aria-pressed={i === 2 ? 'true' : 'false'}>
+                <strong>{t.label ?? `$${t.amount}`}</strong><span>{t.text}</span>
               </button>
             ))}
           </div>
@@ -146,6 +148,8 @@ const faqs = [
   .toggle button[aria-pressed="true"] { background: var(--forest); color: #fff; }
   .amounts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .amount { display: grid; gap: 4px; text-align: left; padding: 14px 16px; border-radius: 14px; border: 1.5px solid #C6D2CA; background: #fff; font: inherit; color: var(--ink); cursor: pointer; min-height: 96px; align-content: start; }
+  .amount--wide { grid-column: 1 / -1; min-height: 0; }
+  .give__note { margin-top: 16px; font-family: var(--display); font-weight: 700; font-size: 19px; color: var(--forest); }
   .amount strong { font-family: var(--serif); font-size: 28px; line-height: 1; }
   .amount span { font-size: 15px; color: var(--body); line-height: 1.35; }
   .amount[aria-pressed="true"] { border: 2px solid var(--forest); background: var(--sage); }
@@ -192,7 +196,8 @@ const faqs = [
   function render() {
     const custom = other.value.replace(/[^0-9.]/g, '');
     const shown = custom || amount;
-    cta.textContent = `Give $${shown}${freq === 'monthly' ? ' monthly' : ''}`;
+    const pretty = Number(shown) ? Number(shown).toLocaleString('en-US', { maximumFractionDigits: 2 }) : shown;
+    cta.textContent = `Give $${pretty}${freq === 'monthly' ? ' monthly' : ''}`;
   }
   form.querySelectorAll<HTMLButtonElement>('[data-freq]').forEach((b) =>
     b.addEventListener('click', () => {
