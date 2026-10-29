@@ -1,6 +1,8 @@
 # Smile Again Families — website
 
-The redesigned site for [Smile Again Families Foundation](https://www.smileagainfamilies.org), Masaka, Uganda. It's built with [Astro](https://astro.build) as a fast static site, with [Supabase](https://supabase.com) for form submissions and stories.
+The redesigned site for [Smile Again Families Foundation](https://www.smileagainfamilies.org), Masaka, Uganda. **Live preview:** https://smile-again.netlify.app. Netlify redeploys it automatically on every push to `main`.
+
+It's built with [Astro](https://astro.build) as a fast static site, with [Supabase](https://supabase.com) for form submissions and stories.
 
 ## Pages
 
