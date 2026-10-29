@@ -1,39 +1,48 @@
 # Smile Again Families — website
 
-The redesigned site for [Smile Again Families Foundation](https://www.smileagainfamilies.org), Masaka, Uganda. **Live preview:** https://smile-again.netlify.app. Netlify redeploys it automatically on every push to `main`.
+The website of [Smile Again Families Foundation](https://www.smileagainfamilies.org), Masaka, Uganda.
 
-It's built with [Astro](https://astro.build) as a fast static site, with [Supabase](https://supabase.com) for form submissions and stories.
+**Live preview:** https://smile-again.netlify.app. Netlify redeploys it automatically on every push to `main`.
+
+Built with [Astro](https://astro.build) as a fast static site, with [Supabase](https://supabase.com) for form submissions, newsletter sign-ups and stories.
 
 ## Pages
 
-| Page | File | What it does |
+| URL | File | Purpose |
 | --- | --- | --- |
-| Home | `src/pages/index.astro` | Story, impact, projects, Safe Home appeal, giving tiers, latest stories |
-| Give | `src/pages/give.astro` | Monthly/one-time picker that opens the PayPal donate button |
-| Get involved | `src/pages/get-involved.astro` | Contact, volunteer and sponsor form → `contact_messages` table |
+| `/` | `src/pages/index.astro` | Home |
+| `/about`, `/about/team` | `src/pages/about/` | Story, mission, timeline; founders, board, staff |
+| `/our-work`, `/our-work/[slug]` | `src/pages/our-work/` | Programs overview and six program pages |
+| `/sponsor` | `src/pages/sponsor.astro` | Sponsor a young mother's education |
+| `/volunteer` | `src/pages/volunteer.astro` | Volunteer role and FOCUS mission trips |
+| `/events` | `src/pages/events.astro` | Your Worth Summit |
+| `/stories`, `/stories/[slug]` | `src/pages/stories/` | Blog, from Supabase |
+| `/give` | `src/pages/give.astro` | Donation picker, opens PayPal |
+| `/contact`, `/privacy` | `src/pages/` | Contact form, privacy policy |
 
-Shared content (stats, projects, tiers, contact details) lives in `src/lib/site.ts`. Photos are in `public/images/`.
+## Where content lives
+
+- **Programs, team, students, timeline, figures:** `src/data/*.ts`
+- **Photos:** `src/assets/photos/`, referenced by file name (e.g. `safe-drone-2`). Astro resizes them and serves AVIF/WebP automatically.
+- **Stories:** the `stories` table in Supabase (`src/data/stories.ts` is a fallback copy). `cover_image` is a photo file name from `src/assets/photos`. After adding a story, trigger a Netlify redeploy.
+- **Old Wix URLs** redirect to the new pages via `public/_redirects`.
+
+## Supabase
+
+Project `jimskfusprtpcdmkocuu` (org **Smile Again**, eu-west-1). The public URL and publishable key are in `.env.production`; they're safe to publish because row-level security protects the data. The migrations in `supabase/migrations/` are already applied:
+
+- **contact_messages:** visitors can only insert. Staff read them in the dashboard and tick `handled`.
+- **subscribers:** newsletter emails; visitors can only insert.
+- **stories:** visitors can only read rows with `published = true`.
 
 ## Run it locally
 
 ```bash
 npm install
-cp .env.example .env   # add your Supabase URL and publishable key
-npm run dev            # http://localhost:4321
-npm run build          # static output in dist/
+npm run dev     # http://localhost:4321
+npm run build   # static output in dist/
 ```
 
-The site still builds without Supabase keys. Stories then fall back to the built-in list, and the form shows an "email us" message.
+## When the domain moves to this site
 
-## Supabase
-
-Project: `jimskfusprtpcdmkocuu` (org **Smile Again**, eu-west-1). Its public URL and publishable key are in `.env.production`. They're safe to publish, because row-level security protects the data. The schema in `supabase/migrations/20261029000000_init.sql` is already applied, and it creates:
-
-- **contact_messages**: visitors can only insert. Staff read them in the dashboard and tick `handled`.
-- **stories**: visitors can only read rows with `published = true`. Add or edit stories in the dashboard's Table Editor, then rebuild the site.
-
-## Still to do
-
-- Footer NGO / registration number (`[REGISTRATION / NGO NUMBER]` in `src/layouts/Base.astro`)
-- Inner pages: About & Team, individual project pages, story detail pages
-- Hosting: deploy `dist/` to Netlify, Vercel or Cloudflare Pages, and add a rebuild hook for new stories
+Set the Netlify environment variable `SITE_URL=https://www.smileagainfamilies.org` and redeploy. Canonical URLs, the sitemap and social previews will then use the real domain.
