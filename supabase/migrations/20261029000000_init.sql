@@ -44,6 +44,12 @@ create policy "Published stories are public"
 
 create index stories_published_at_idx on public.stories (published_at desc) where published;
 
+-- Explicit table privileges (RLS policies above still decide which rows)
+revoke all on public.contact_messages from anon, authenticated;
+grant insert (type, first_name, last_name, email, phone, message) on public.contact_messages to anon, authenticated;
+revoke all on public.stories from anon, authenticated;
+grant select on public.stories to anon, authenticated;
+
 -- Existing posts from the current site
 insert into public.stories (slug, title, excerpt, category, published, published_at) values
   ('christmas-brings-a-lot-of-joy', 'Christmas brings a lot of joy', 'Our thanks to every friend who supported and prayed for the mothers this year.', 'Community', true, '2023-12-27'),

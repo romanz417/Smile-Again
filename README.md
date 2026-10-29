@@ -25,7 +25,7 @@ The site still builds without Supabase keys. Stories then fall back to the built
 
 ## Supabase
 
-Apply `supabase/migrations/20261029000000_init.sql`. It creates:
+Project: `jimskfusprtpcdmkocuu` (org **Smile Again**, eu-west-1). Its public URL and publishable key are in `.env.production`. They're safe to publish, because row-level security protects the data. The schema in `supabase/migrations/20261029000000_init.sql` is already applied, and it creates:
 
 - **contact_messages**: visitors can only insert. Staff read them in the dashboard and tick `handled`.
 - **stories**: visitors can only read rows with `published = true`. Add or edit stories in the dashboard's Table Editor, then rebuild the site.
