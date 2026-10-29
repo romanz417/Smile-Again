@@ -13,6 +13,9 @@ const fbParams = new URLSearchParams({
   small_header: 'false', adapt_container_width: 'true', hide_cover: 'false', show_facepile: 'false',
 });
 const fbSrc = `https://www.facebook.com/plugins/page.php?${fbParams}`;
+// Facebook refuses to embed this page right now ("refused to connect"). Set to true once the
+// Facebook Page is public with no age/country restrictions, and the live feed will show again.
+const FB_EMBED = false;
 ---
 <Base
   title="Stories and News from Masaka, Uganda"
@@ -34,6 +37,7 @@ const fbSrc = `https://www.facebook.com/plugins/page.php?${fbParams}`;
         <div class="fb__inner">
           <h2 class="h4" id="fb-title">Latest on Facebook</h2>
           <p class="small muted">Day-to-day news from the mothers, the Safe Home and our team.</p>
+          {FB_EMBED ? (
           <div class="fb__frame">
             <iframe
               src={fbSrc}
@@ -45,6 +49,13 @@ const fbSrc = `https://www.facebook.com/plugins/page.php?${fbParams}`;
               allow="encrypted-media"
             ></iframe>
           </div>
+          ) : (
+          <a class="fb__card" href={fbPage} target="_blank" rel="noopener">
+            <span class="fb__logo" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg></span>
+            <strong>Smile Again Families Uganda</strong>
+            <span class="small">Photos and updates from Masaka, posted by our team most weeks.</span>
+          </a>
+          )}
           <a class="btn btn--solid btn--sm fb__follow" href={fbPage} target="_blank" rel="noopener">Follow us on Facebook</a>
         </div>
       </aside>
@@ -60,6 +71,11 @@ const fbSrc = `https://www.facebook.com/plugins/page.php?${fbParams}`;
   .fb__frame { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; max-height: calc(100vh - 260px); min-height: 520px; overflow-y: auto; }
   .fb__frame iframe { display: block; width: 100%; max-width: 360px; height: 1100px; border: 0; margin: 0 auto; }
   .fb__follow { justify-self: start; }
+  .fb__card { display: grid; gap: 8px; padding: 26px; border-radius: var(--radius); background: var(--sage); color: var(--ink); text-decoration: none; border: 1px solid var(--line); }
+  .fb__card strong { font-family: var(--display); font-size: 20px; color: var(--forest); }
+  .fb__card .small { color: var(--body); }
+  .fb__card:hover strong { text-decoration: underline; }
+  .fb__logo { color: #1877F2; }
   @media (max-width: 1080px) {
     .layout { grid-template-columns: minmax(0, 1fr); }
     .fb__inner { position: static; max-width: 420px; }
