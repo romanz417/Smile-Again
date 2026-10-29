@@ -21,6 +21,11 @@ const designations = [
   ['prevention', 'Prevention in schools'],
   ['summit', 'Your Worth Summit'],
 ];
+const slides = [
+  { name: 'who-1', alt: 'A young mother at a Smile Again gathering with her sleeping baby', pos: '50% 50%' },
+  { name: 'proj-girlchild', alt: 'A young mother in Masaka holding her baby', pos: '40% 50%' },
+  { name: 'body-1', alt: 'A young mother holding her baby at a health camp', pos: '50% 50%' },
+];
 const faqs = [
   ['Is my gift tax-deductible?', `For US donors, yes. Gifts are received by ${org.usEntity} in ${org.usCity}, a registered 501(c)(3) charity, EIN ${org.usEin}. Please keep your PayPal receipt for your records.`],
   ['How do I change or cancel a monthly gift?', 'Log in to PayPal and open Settings, then Payments, then Manage automatic payments. You can also email us and we will help.'],
@@ -41,7 +46,16 @@ const faqs = [
         <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Donate</span></li></ol></nav>
         <h1 class="h1 rise">Help a young mother smile again.</h1>
         <p class="lead rise rise-2" style="margin-top:22px">Your gift reaches mothers and children directly: food, childcare, school materials and counseling, and the staff who walk beside each woman as she rebuilds her life.</p>
-        <Photo name="who-1" alt="A volunteer comforting a young mother and her baby" shape="arch" ratio="tall" eager sizes="(max-width: 860px) 80vw, 380px" widths={[480, 800]} class="give__photo rise rise-3" />
+        <div class="slides give__photo rise rise-3" role="region" aria-roledescription="carousel" aria-label="Mothers we serve">
+          {slides.map((sl, i) => (
+            <div class="slide" data-active={i === 0 ? 'true' : 'false'} aria-hidden={i === 0 ? 'false' : 'true'} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
+              <Photo name={sl.name} alt={sl.alt} ratio="free" eager={i === 0} sizes="(max-width: 860px) 80vw, 380px" widths={[480, 800]} position={sl.pos} />
+            </div>
+          ))}
+          <div class="slides__dots">
+            {slides.map((sl, i) => <button type="button" class="slides__dot" aria-label={`Show photo ${i + 1}`} aria-current={i === 0 ? 'true' : 'false'} data-i={i}></button>)}
+          </div>
+        </div>
       </div>
 
       <form class="give__form" id="give-form" aria-labelledby="give-title">
@@ -121,6 +135,15 @@ const faqs = [
 <style>
   .give { background: var(--sage); padding-block: clamp(40px, 6vw, 80px) var(--space); }
   .give__intro :global(.give__photo) { max-width: 380px; margin-top: 40px; }
+  .slides { position: relative; aspect-ratio: 4 / 5; border-radius: var(--arch); overflow: hidden; background: var(--sage-2); }
+  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+  .slide[data-active="true"] { opacity: 1; }
+  .slide :global(.ph) { height: 100%; border-radius: 0; }
+  .slides__dots { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; justify-content: center; gap: 4px; z-index: 2; }
+  .slides__dot { width: 28px; height: 28px; border: 0; padding: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .slides__dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.6); box-shadow: 0 1px 4px rgba(0,0,0,.35); transition: background .2s, transform .2s; }
+  .slides__dot[aria-current="true"]::before { background: #fff; transform: scale(1.25); }
+  @media (prefers-reduced-motion: reduce) { .slide { transition: none; } }
   @media (max-width: 860px) { .give__intro :global(.give__photo) { display: none; } }
   .give__form { background: #fff; border-radius: 22px; padding: clamp(24px, 4vw, 44px); box-shadow: 0 24px 60px rgba(16,36,26,.10); display: grid; gap: 26px; }
   .give__form fieldset { border: 0; margin: 0; padding: 0; }
@@ -150,6 +173,29 @@ const faqs = [
 </style>
 
 <script>
+  // Photo slideshow beside the donation form: cross-fades every 5 seconds, pauses on hover or focus.
+  const show = document.querySelector<HTMLElement>('.slides');
+  if (show) {
+    const slides = [...show.querySelectorAll<HTMLElement>('.slide')];
+    const dots = [...show.querySelectorAll<HTMLButtonElement>('.slides__dot')];
+    let cur = 0;
+    let timer: number | undefined;
+    const go = (n: number) => {
+      cur = (n + slides.length) % slides.length;
+      slides.forEach((sl, i) => { sl.dataset.active = String(i === cur); sl.setAttribute('aria-hidden', String(i !== cur)); });
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === cur)));
+    };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const start = () => { if (!reduce) { stop(); timer = window.setInterval(() => go(cur + 1), 5000); } };
+    const stop = () => { if (timer) window.clearInterval(timer); };
+    dots.forEach((d) => d.addEventListener('click', () => { go(Number(d.dataset.i)); start(); }));
+    show.addEventListener('mouseenter', stop);
+    show.addEventListener('mouseleave', start);
+    show.addEventListener('focusin', stop);
+    show.addEventListener('focusout', start);
+    start();
+  }
+
   import { paypalGiftUrl } from '../lib/paypal';
   const form = document.getElementById('give-form') as HTMLFormElement;
   const cta = document.getElementById('give-cta')!;
