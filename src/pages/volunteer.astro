@@ -36,7 +36,7 @@ const gain = [
 >
   <PageHeader
     title="Volunteer with us in Uganda"
-    lead="Missionaries and volunteers bring faith-driven, practical support to young mothers who have known abandonment and abuse. Their presence builds relationships that restore dignity and confidence."
+    lead="Together with missionaries from FOCUS and dedicated individual volunteers, we bring compassionate, faith-driven and practical support to young mothers who have known abandonment and abuse. Their presence builds relationships that restore dignity, rebuild confidence and nurture a renewed sense of purpose."
     crumbs={[{ label: 'Get involved' }, { label: 'Volunteer & mission trips' }]}
     image="focus-4"
     imageAlt="Volunteers dancing with mothers and children"
@@ -49,8 +49,8 @@ const gain = [
       <div class="stack">
         <h2 class="h2">Mission trips with FOCUS</h2>
         <div class="prose">
-          <p>FOCUS — the Fellowship of Catholic University Students — began as a small movement on college campuses and now accompanies Catholics at every stage of life.</p>
-          <p>Every year, FOCUS sends missionaries to Uganda to serve with Smile Again Families. They spend time with mothers and their babies, both in the villages and at our center, through mentorship, discipleship, life-skills training and outreach. It is a spiritually nourishing experience for everyone involved.</p>
+          <p>FOCUS — the Fellowship of Catholic University Students — began humbly as a small movement on college campuses and grew into a mission marked by clarity and conviction. Its missionaries have shared the Gospel with hundreds of thousands of students through campus outreach, Bible studies, discipleship, mission trips and national conferences.</p>
+          <p>Today FOCUS stays true to that founding story while reaching further, accompanying Catholics at every stage of life. Every year it sends missionaries to Uganda to serve with Smile Again Families. They spend time with teenage mothers, their babies and local parishioners, both in the villages and at our center, through mentorship, discipleship, life-skills training and outreach. It is a spiritually nourishing experience for the people served and the missionaries alike.</p>
         </div>
         <a class="link-more" href="https://focus.org/missions/trips/africa/uganda/" rel="noopener">See FOCUS mission trips to Uganda <Icon name="arrow" size={18} /></a>
       </div>
@@ -66,7 +66,7 @@ const gain = [
     <div class="wrap">
       <div class="section-head">
         <h2 class="h2">The volunteer role</h2>
-        <p class="lead">Volunteers serve at our center and in the field, helping create a safe, nurturing and empowering environment for mothers and their children. The minimum commitment is one week.</p>
+        <p class="lead">Volunteers serve at our center and in the field, helping create a safe, nurturing and empowering environment for mothers and their children. By joining the mission, you help teenage mothers rediscover their worth and build a better future for themselves and their children. The minimum commitment is one week.</p>
       </div>
       <div class="cols">
         <div><h3 class="h4">What you’ll do</h3><ul class="ticks">{duties.map((d) => <li><Icon name="check" /><span>{d}</span></li>)}</ul></div>
@@ -89,7 +89,7 @@ const gain = [
 
 <style>
   .mosaic { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  .mosaic > :first-child { grid-column: 1 / -1; }
+  .mosaic > :global(:first-child) { grid-column: 1 / -1; }
   .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
   .cols h3 { margin-bottom: 18px; }
   .cols .ticks { font-size: 17px; }
