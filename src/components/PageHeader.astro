@@ -36,7 +36,7 @@ const { title, lead, crumbs = [], image, imageAlt = '', position } = Astro.props
 
 <style>
   .page-head { padding-block: clamp(48px, 7vw, 96px) clamp(56px, 8vw, 104px); background: var(--peach); }
-  .page-head .split { align-items: end; }
+  .page-head .split { align-items: start; }
   .page-head :global(.ph--arch) { max-width: 460px; margin-left: auto; }
   @media (max-width: 860px) { .page-head :global(.ph--arch) { max-width: 360px; margin: 0 auto; } }
 </style>
