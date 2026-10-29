@@ -7,6 +7,6 @@ const site = process.env.SITE_URL || 'https://smile-again.netlify.app';
 export default defineConfig({
   site,
   trailingSlash: 'never',
-  build: { format: 'directory' },
+  build: { format: 'file' },
   integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
 });
