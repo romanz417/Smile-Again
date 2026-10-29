@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import { tiers, designations, contact, paypalDonateUrl } from '../lib/site';
+---
+<Base title="Give — Smile Again Families Foundation" description="Help a young mother smile again. Give monthly or once to Smile Again Families Foundation in Masaka, Uganda.">
+  <div style="background:var(--peach)">
+    <div class="wrap split" style="padding-block:72px 104px;align-items:flex-start">
+      <div style="flex-basis:440px">
+        <p class="eyebrow">Support us</p>
+        <h1 style="font-size:clamp(40px,4.6vw,60px);font-weight:800;line-height:1.04;letter-spacing:-.025em">Help a young mother smile again.</h1>
+        <p class="lead" style="margin:22px 0 0;font-size:20px">Every gift goes directly to the mothers and children we serve — food, childcare, school materials, counselling, and the staff who walk alongside each woman as she rebuilds her life with dignity.</p>
+        <img src="/images/school.webp" alt="Young mothers back in school uniform" width="560" height="420" style="width:100%;height:340px;object-fit:cover;border-radius:26px;margin-top:36px" />
+        <div style="margin-top:32px;display:grid;gap:16px" class="lead">
+          <p style="margin:0">Secure giving by card or PayPal. US gifts are tax-deductible through Smile Again Families International.</p>
+          <p style="margin:0">Want to sponsor a specific girl's schooling? <a href="/get-involved?type=sponsor">Tell us</a> or email <a href={`mailto:${contact.email}`}>{contact.email}</a>.</p>
+        </div>
+      </div>
+
+      <form class="form" id="give-form" action={paypalDonateUrl} method="get" target="_blank" style="flex-basis:460px" data-paypal={paypalDonateUrl}>
+        <fieldset>
+          <legend>How often?</legend>
+          <div class="toggle" role="group" aria-label="Frequency">
+            <button type="button" data-freq="monthly" aria-pressed="true">Monthly</button>
+            <button type="button" data-freq="once" aria-pressed="false">One-time</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Choose an amount</legend>
+          <div class="amounts">
+            {tiers.map((t, i) => (
+              <button type="button" class="amount" data-amount={t.amount} data-recurring={t.per === '/month' ? '1' : '0'} aria-pressed={t.featured ? 'true' : 'false'}>
+                <strong>{t.amount}</strong><span>{t.text}</span>
+              </button>
+            ))}
+          </div>
+          <label for="other-amount">Or enter another amount (USD)</label>
+          <input id="other-amount" type="text" inputmode="decimal" placeholder="$" autocomplete="off" />
+        </fieldset>
+
+        <label for="designation">Direct my gift to</label>
+        <select id="designation">
+          {designations.map((d) => <option>{d}</option>)}
+        </select>
+
+        <button class="btn btn--primary" type="submit" id="give-cta">Give $100 monthly</button>
+        <p class="form__note">You'll finish securely on PayPal — card or PayPal account. Please add your chosen project in the PayPal note.</p>
+      </form>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const form = document.getElementById('give-form') as HTMLFormElement;
+  const cta = document.getElementById('give-cta')!;
+  const other = document.getElementById('other-amount') as HTMLInputElement;
+  const select = document.getElementById('designation') as HTMLSelectElement;
+  let freq = 'monthly';
+  let amount = '$100';
+  let recurring = true;
+
+  if (new URLSearchParams(location.search).get('for') === 'safe-home') select.value = 'Safe Home operations';
+
+  function render() {
+    const custom = other.value.trim().replace(/^\$/, '');
+    const shown = custom ? `$${custom}` : amount;
+    cta.textContent = `Give ${shown}${freq === 'monthly' && (custom || recurring) ? ' monthly' : ''}`;
+  }
+
+  form.querySelectorAll<HTMLButtonElement>('[data-freq]').forEach((b) =>
+    b.addEventListener('click', () => {
+      freq = b.dataset.freq!;
+      form.querySelectorAll('[data-freq]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      render();
+    }),
+  );
+  form.querySelectorAll<HTMLButtonElement>('.amount').forEach((b) =>
+    b.addEventListener('click', () => {
+      amount = b.dataset.amount!;
+      recurring = b.dataset.recurring === '1';
+      other.value = '';
+      form.querySelectorAll('.amount').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      render();
+    }),
+  );
+  other.addEventListener('input', render);
+
+  // The hosted PayPal button chooses the amount on PayPal's side; we just open it.
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    window.open(form.dataset.paypal!, '_blank', 'noopener');
+  });
+</script>

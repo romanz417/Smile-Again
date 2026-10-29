@@ -1,0 +1,154 @@
+---
+import Base from '../layouts/Base.astro';
+import { stats, projects, tiers } from '../lib/site';
+import { getStories, formatDate } from '../lib/supabase';
+
+const stories = await getStories(3);
+const check = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4A261" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+---
+<Base title="Smile Again Families Foundation — Healing hearts, building futures">
+  <section class="hero" id="top">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Masaka, Uganda · Since 2014</p>
+        <h1>Healing hearts, building futures — one family at a time.</h1>
+        <p class="lead">We walk with abused and abandoned teenage mothers as they rediscover their worth, return to school, learn a skill, and build a stable life for their children.</p>
+        <div class="btns">
+          <a class="btn btn--primary" href="/give">Give monthly</a>
+          <a class="btn btn--outline" href="#about">Read our story</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <img src="/images/hero.webp" alt="Three young children smiling outside a church in Masaka" width="1280" height="860" fetchpriority="high" />
+        <div class="hero__badge"><strong>798</strong><span>young mothers' lives transformed in ten years</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Our impact">
+    <div class="wrap">
+      {stats.map((s) => <div><strong>{s.value}</strong><span>{s.label}</span></div>)}
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="wrap split" style="align-items:flex-start">
+      <div style="flex-basis:420px">
+        <p class="eyebrow">Who we are</p>
+        <h2 class="h2">A family that started with one couple's calling.</h2>
+      </div>
+      <div class="lead" style="flex-basis:560px">
+        <p style="margin-top:0">In 2014, Fred and Stella — a Ugandan married couple supporting young families to embrace Christian marriage — noticed a pattern. Many struggling marriages carried an unaddressed childhood wound: early pregnancy from rape or defilement, often followed by early marriage.</p>
+        <p style="margin-bottom:32px">So they set out to find the girls carrying that wound alone, and to help them restore hope through psycho-social support, vocational and entrepreneurial training, and a way back into their communities.</p>
+        <div class="grid" style="--min:240px;gap:20px">
+          <div class="panel" style="background:var(--green-tint)">
+            <h3>Our mission</h3>
+            <p>To support abused and abandoned teenage mothers to discover their inner worth by restoring them emotionally, spiritually and economically.</p>
+          </div>
+          <div class="panel" style="background:var(--peach)">
+            <h3>Our vision</h3>
+            <p>Strong, sustainable and reliable families that will historically transform society.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" style="background:#F6F8F6" aria-labelledby="levels">
+    <div class="wrap">
+      <h2 id="levels" class="h2" style="font-size:40px;max-width:720px;margin-bottom:40px">Restoration happens on three levels.</h2>
+      <div class="grid" style="--min:260px;gap:24px">
+        <div class="card card--pad">
+          <span class="icon-tile"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+          <h3 style="color:var(--ink);font-size:24px">Emotionally</h3>
+          <p>Counselling, psycho-social support and solidarity groups, so no mother carries her story alone.</p>
+        </div>
+        <div class="card card--pad">
+          <span class="icon-tile icon-tile--warm"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M9 5h6"/><path d="M12 8c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9z"/></svg></span>
+          <h3 style="color:var(--ink);font-size:24px">Spiritually</h3>
+          <p>Faith-rooted care through our partner parishes, helping each mother see the value of her life again.</p>
+        </div>
+        <div class="card card--pad">
+          <span class="icon-tile"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-6h4v6"/></svg></span>
+          <h3 style="color:var(--ink);font-size:24px">Economically</h3>
+          <p>Vocational and business training — tailoring, hairdressing, computer skills — for income that lasts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <div class="wrap">
+      <div class="row-head">
+        <div style="max-width:640px">
+          <p class="eyebrow">Our work</p>
+          <h2 class="h2">Six projects, one journey back to a full life.</h2>
+        </div>
+      </div>
+      <div class="grid" style="--min:320px">
+        {projects.map((p) => (
+          <a class="card project" href={p.href ?? '/get-involved'}>
+            <img src={p.img} alt={p.alt} width="560" height="420" loading="lazy" />
+            <div><h3>{p.title}</h3><p>{p.text}</p></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="safe-home" class="dark section--tight">
+    <div class="wrap split">
+      <img src="/images/safehome.webp" alt="The completed Guadalupe Mission Home at night" width="560" height="420" loading="lazy" style="width:100%;height:460px;object-fit:cover;border-radius:28px" />
+      <div>
+        <p class="pill">Construction complete</p>
+        <h2 class="h2">The Guadalupe Mission Home is open. Now help us keep the lights on.</h2>
+        <p style="margin:22px 0 0">A safe place for abandoned mothers to live as a family, with daily care before and after birth, a training centre for skills workshops, and a children's day-care and play centre.</p>
+        <ul class="checks">
+          {['Food', 'Medical care', 'School needs', 'Hygiene & child care'].map((i) => <li><Fragment set:html={check} />{i}</li>)}
+        </ul>
+        <div class="btns">
+          <a class="btn btn--primary" href="/give?for=safe-home">Support Safe Home operations</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="involved" class="section" style="background:var(--peach)">
+    <div class="wrap">
+      <div style="text-align:center;max-width:720px;margin:0 auto 48px">
+        <p class="eyebrow">Get involved</p>
+        <h2 class="h2">Every gift walks with a mother.</h2>
+        <p class="lead" style="margin:18px 0 0">General donations cover food, childcare, school materials, counselling and the staff who walk alongside each young woman.</p>
+      </div>
+      <div class="grid" style="--min:210px;gap:20px">
+        {tiers.map((t) => (
+          <div class:list={['tier', { 'tier--featured': t.featured }]}>
+            {t.featured && <span class="tier__flag">Most impact</span>}
+            <strong>{t.amount}{t.per && <small>{t.per}</small>}</strong>
+            <p>{t.text}</p>
+          </div>
+        ))}
+      </div>
+      <div class="btns" style="justify-content:center;margin-top:40px">
+        <a class="btn btn--primary" href="/give">Give now</a>
+        <a class="btn btn--outline" href="/get-involved?type=volunteer">Volunteer with us</a>
+        <a class="btn btn--outline" href="/get-involved?type=sponsor">Sponsor a girl's schooling</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="news" class="section">
+    <div class="wrap">
+      <div class="row-head"><h2 class="h2">Stories &amp; updates</h2></div>
+      <div class="grid">
+        {stories.map((s) => (
+          <article class="story">
+            <span class="meta"><time datetime={s.published_at}>{formatDate(s.published_at)}</time>{s.category && ` · ${s.category}`}</span>
+            <h3>{s.title}</h3>
+            <p>{s.excerpt}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import { contact } from '../lib/site';
+---
+<Base title="Get involved — Smile Again Families Foundation" description="Volunteer, sponsor a girl's schooling, or get in touch with Smile Again Families Foundation.">
+  <div class="wrap split section" style="align-items:flex-start">
+    <div style="flex-basis:420px">
+      <p class="eyebrow">Get involved</p>
+      <h1 style="font-size:clamp(38px,4.4vw,56px);font-weight:800;line-height:1.05">Walk with a young mother.</h1>
+      <p class="lead" style="font-size:20px">Volunteer your time or skills, sponsor a girl's return to school, or ask us anything about our projects. We'll reply within a few days.</p>
+      <div class="lead" style="display:grid;gap:6px;margin-top:28px">
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <a href={contact.phoneHref}>{contact.phone}</a>
+        <span>{contact.address}</span>
+      </div>
+    </div>
+
+    <form class="form" id="contact-form" style="flex-basis:520px" novalidate>
+      <label for="type" style="margin-top:0">I'd like to…</label>
+      <select id="type" name="type" required>
+        <option value="general">Ask a question</option>
+        <option value="volunteer">Volunteer</option>
+        <option value="sponsor">Sponsor a girl's schooling</option>
+        <option value="partner">Partner with you</option>
+      </select>
+
+      <div class="grid" style="--min:200px;gap:0 16px">
+        <div><label for="first_name">First name</label><input id="first_name" name="first_name" autocomplete="given-name" required /></div>
+        <div><label for="last_name">Last name</label><input id="last_name" name="last_name" autocomplete="family-name" /></div>
+      </div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required />
+      <label for="phone">Phone (optional)</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" />
+      <label for="message">Message</label>
+      <textarea id="message" name="message" required></textarea>
+      <!-- Spam trap: real people never fill this in -->
+      <div class="sr-only" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off" /></div>
+
+      <button class="btn btn--primary" type="submit">Send message</button>
+      <p class="form__status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</Base>
+
+<script>
+  import { supabase } from '../lib/supabase';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const status = form.querySelector('.form__status') as HTMLElement;
+  const type = new URLSearchParams(location.search).get('type');
+  if (type) (form.elements.namedItem('type') as HTMLSelectElement).value = type;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    if (data.website) return; // bot
+    if (!data.first_name || !data.email || !data.message || !form.checkValidity()) {
+      status.dataset.state = 'error';
+      status.textContent = 'Please add your name, a valid email and a message.';
+      return;
+    }
+    const button = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    button.disabled = true;
+    status.dataset.state = '';
+    status.textContent = 'Sending…';
+
+    const row = {
+      type: data.type,
+      first_name: data.first_name,
+      last_name: data.last_name || null,
+      email: data.email,
+      phone: data.phone || null,
+      message: data.message,
+    };
+    const { error } = supabase
+      ? await supabase.from('contact_messages').insert(row)
+      : { error: new Error('Supabase not configured') };
+
+    button.disabled = false;
+    if (error) {
+      status.dataset.state = 'error';
+      status.textContent = 'Sorry, that didn’t send. Please email us at smileagain.families@gmail.com.';
+      return;
+    }
+    form.reset();
+    status.dataset.state = 'ok';
+    status.textContent = 'Thank you — your message has reached the team.';
+  });
+</script>
